@@ -14,7 +14,8 @@ from homeassistant.helpers.update_coordinator import (
     DataUpdateCoordinator,
 )
 
-from .const import DOMAIN
+from . import CONF_MAX_LOAD
+from .const import DOMAIN, ATTR_MAX_CURRENT
 from .entity import WallboxBaseEntity
 from .helpers import WallboxClientExecutor
 
@@ -33,7 +34,7 @@ async def async_setup_entry(
     executor: WallboxClientExecutor = data["executor"]
     coordinator: DataUpdateCoordinator = data["coordinator"]
 
-    max_load = entry.data.get("max_load", 16)
+    max_load = entry.data.get(CONF_MAX_LOAD, 16)
 
     async_add_entities([WallboxLoadLimitNumber(coordinator, executor, max_load)])
 
@@ -46,7 +47,7 @@ class WallboxLoadLimitNumber(CoordinatorEntity, WallboxBaseEntity, NumberEntity)
     _attr_icon = "mdi:flash"
     _attr_native_unit_of_measurement = "A"
     _attr_entity_category = EntityCategory.CONFIG
-    _attr_mode = NumberMode.BOX
+    _attr_mode = NumberMode.SLIDER
 
     def __init__(
         self,
@@ -80,10 +81,10 @@ class WallboxLoadLimitNumber(CoordinatorEntity, WallboxBaseEntity, NumberEntity)
     @property
     def native_value(self) -> float | None:
         """Return the current load limit value."""
-        value = self.executor.data.get("max_current")
+        value = self.executor.data.get(ATTR_MAX_CURRENT)
         return float(value) if value is not None else None
 
     @property
     def available(self) -> bool:
         """Return True if the entity is available."""
-        return self.executor.last_update_success and "max_current" in self.executor.data
+        return self.executor.last_update_success and ATTR_MAX_CURRENT in self.executor.data

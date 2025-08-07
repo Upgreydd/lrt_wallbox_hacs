@@ -7,7 +7,7 @@ from typing import Any
 
 from homeassistant.components.sensor import SensorDeviceClass, SensorEntity
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import EntityCategory
+from homeassistant.const import EntityCategory, ATTR_SERIAL_NUMBER
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import (
@@ -15,77 +15,79 @@ from homeassistant.helpers.update_coordinator import (
     DataUpdateCoordinator,
 )
 
-from .const import DOMAIN
+from .const import DOMAIN, ATTR_ESP_FW, ATTR_ATMEL_FW, ATTR_CHARGER_STATUS, ATTR_CHARGER_CURRENT_RATE, \
+    ATTR_CHARGER_SECONDS_SINCE_START, ATTR_CHARGER_CURRENT_ENERGY, ATTR_LAST_TRANSACTION_START_TIME, \
+    ATTR_LAST_TRANSACTION_END_TIME, ATTR_LAST_TRANSACTION_ENERGY
 from .entity import WallboxBaseEntity
 from .helpers import WallboxClientExecutor
 
 _LOGGER = logging.getLogger(__name__)
 
 METADATA_SENSOR_DEFINITIONS: dict[str, dict[str, Any]] = {
-    "atmel_fw": {
+    ATTR_ATMEL_FW: {
         "name": "Atmel Firmware",
         "unit": None,
-        "translation_key": "atmel_fw",
+        "translation_key": ATTR_ATMEL_FW,
         "icon": "mdi:chip",
     },
-    "esp_fw": {
+    ATTR_ESP_FW: {
         "name": "ESP Firmware",
         "unit": None,
-        "translation_key": "esp_fw",
+        "translation_key": ATTR_ESP_FW,
         "icon": "mdi:cpu-32-bit",
     },
-    "serial_number": {
+    ATTR_SERIAL_NUMBER: {
         "name": "Serial Number",
         "unit": None,
-        "translation_key": "serial_number",
+        "translation_key": ATTR_SERIAL_NUMBER,
         "icon": "mdi:information-outline",
     },
-    "charger_status": {
+    ATTR_CHARGER_STATUS: {
         "name": "Charger Status",
         "unit": None,
-        "translation_key": "charger_status",
+        "translation_key": ATTR_CHARGER_STATUS,
         "icon": "mdi:ev-station",
         "device_class": SensorDeviceClass.ENUM,
     },
-    "charger_current_rate": {
+    ATTR_CHARGER_CURRENT_RATE: {
         "name": "Charger Current Rate",
         "unit": "A",
-        "translation_key": "charger_current_rate",
+        "translation_key": ATTR_CHARGER_CURRENT_RATE,
         "icon": "mdi:flash",
         "device_class": SensorDeviceClass.CURRENT,
     },
-    "charger_seconds_since_start": {
+    ATTR_CHARGER_SECONDS_SINCE_START: {
         "name": "Charger Seconds Since Start",
         "unit": "s",
-        "translation_key": "charger_seconds_since_start",
+        "translation_key": ATTR_CHARGER_SECONDS_SINCE_START,
         "icon": "mdi:timer",
         "device_class": SensorDeviceClass.DURATION,
     },
-    "charger_current_energy": {
+    ATTR_CHARGER_CURRENT_ENERGY: {
         "name": "Charger Current Energy",
         "unit": "kWh",
-        "translation_key": "charger_current_energy",
+        "translation_key": ATTR_CHARGER_CURRENT_ENERGY,
         "icon": "mdi:lightning-bolt",
         "device_class": SensorDeviceClass.ENERGY,
     },
-    "last_transaction_start_time": {
+    ATTR_LAST_TRANSACTION_START_TIME: {
         "name": "Last Transaction Start Time",
         "unit": None,
-        "translation_key": "last_transaction_start_time",
+        "translation_key": ATTR_LAST_TRANSACTION_START_TIME,
         "icon": "mdi:clock-start",
         "device_class": SensorDeviceClass.TIMESTAMP,
     },
-    "last_transaction_end_time": {
+    ATTR_LAST_TRANSACTION_END_TIME: {
         "name": "Last Transaction End Time",
         "unit": None,
-        "translation_key": "last_transaction_end_time",
+        "translation_key": ATTR_LAST_TRANSACTION_END_TIME,
         "icon": "mdi:clock-end",
         "device_class": SensorDeviceClass.TIMESTAMP,
     },
-    "last_transaction_energy": {
+    ATTR_LAST_TRANSACTION_ENERGY: {
         "name": "Last Transaction Energy",
         "unit": "kWh",
-        "translation_key": "last_transaction_energy",
+        "translation_key": ATTR_LAST_TRANSACTION_ENERGY,
         "icon": "mdi:lightning-bolt",
         "device_class": SensorDeviceClass.ENERGY,
     },
