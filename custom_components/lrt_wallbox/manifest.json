@@ -1,5 +1,7 @@
 {
   "domain": "lrt_wallbox",
+  "documentation": "https://github.com/Upgreydd/lrt_wallbox_hacs",
+  "issue_tracker": "https://github.com/Upgreydd/lrt_wallbox_hacs/issues",
   "name": "LRT Wallbox",
   "version": "0.1.0",
   "config_flow": true,
