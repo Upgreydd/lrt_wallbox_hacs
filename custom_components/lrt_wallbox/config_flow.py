@@ -7,15 +7,22 @@ import voluptuous as vol
 from homeassistant import config_entries
 from homeassistant.config_entries import ConfigEntry, ConfigFlowResult, OptionsFlow
 from homeassistant.core import callback
-from lrt_wallbox import WallboxError
-from .const import CONF_MAX_LOAD, DOMAIN
-from homeassistant.const import CONF_USERNAME, CONF_PASSWORD, CONF_HOST, CONF_NAME
-from .helpers import WallboxClientExecutor, tag_id_to_hex
 from homeassistant.helpers import config_validation as cv
+from homeassistant.const import CONF_USERNAME, CONF_PASSWORD, CONF_HOST, CONF_NAME
+
+from lrt_wallbox import WallboxError
+
+from .const import CONF_MAX_LOAD, DOMAIN
+from .helpers import WallboxClientExecutor, tag_id_to_hex
 
 
-def general_data_schema(current=None):
-    """Return a schema for general configuration data."""
+def general_data_schema(current: dict[str, Any] | None = None) -> vol.Schema:
+    """Return a schema for general configuration data.
+
+    Field labels come from translations:
+      - config.step.user.data.*
+      - config.step.general.data.*
+    """
     if current is None:
         current = {}
     return vol.Schema(
@@ -47,9 +54,13 @@ class LrtWallboxConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     DATA_SCHEMA = general_data_schema()
 
     async def async_step_user(
-        self, user_input: dict[str, Any] | None = None
+            self, user_input: dict[str, Any] | None = None
     ) -> ConfigFlowResult:
-        """Handle the initial step of the config flow."""
+        """Handle the initial step of the config flow.
+
+        Title/description/labels are taken from translations:
+          config.step.user.title / description / data.*
+        """
         if user_input is not None:
             return self.async_create_entry(
                 title=f"LRT Wallbox @ {user_input[CONF_HOST]} (user: {user_input[CONF_USERNAME]})",
@@ -66,13 +77,6 @@ class LrtWallboxConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             step_id="user",
             data_schema=self.DATA_SCHEMA,
             errors={},
-            description_placeholders={
-                CONF_NAME: "Custom name for your wallbox",
-                CONF_HOST: "IP address of your wallbox",
-                CONF_USERNAME: "Username set while configuring wallbox over LRT PowerUP",
-                CONF_PASSWORD: "Password received while configuring wallbox over LRT PowerUP",
-                CONF_MAX_LOAD: "Max load (soft limiter) for your wallbox in Amper",
-            },
         )
 
     async def async_step_import(self, user_input: dict[str, Any]) -> ConfigFlowResult:
@@ -92,10 +96,14 @@ class LrtWallboxOptionsFlow(config_entries.OptionsFlow):
     def __init__(self, config_entry: ConfigEntry) -> None:
         """Initialize the options flow."""
         self.config_entry = config_entry
-        self.tag_id = None
+        self.tag_id: list[int] | None = None
 
-    async def async_step_init(self, user_input=None):
-        """Present the initial options step."""
+    async def async_step_init(self, user_input: dict[str, Any] | None = None):
+        """Present the initial options step.
+
+        Title/description/labels from translations:
+          config.step.init.title / description / data.choice
+        """
         if user_input is not None:
             choice = user_input["choice"]
             if choice == "general":
@@ -105,23 +113,28 @@ class LrtWallboxOptionsFlow(config_entries.OptionsFlow):
             if choice == "rfid_delete":
                 return await self.async_step_rfid_delete()
 
+        # Keep raw option keys; the field label is translated.
         return self.async_show_form(
             step_id="init",
             data_schema=vol.Schema(
                 {
                     vol.Required("choice"): vol.In(
                         {
-                            "general": "Configure Wallbox connection",
-                            "rfid": "Add RFID tag",
-                            "rfid_delete": "Delete RFID tag",
+                            "general": "general",
+                            "rfid": "rfid",
+                            "rfid_delete": "rfid_delete",
                         }
                     )
                 }
             ),
         )
 
-    async def async_step_general(self, user_input=None):
-        """Handle general settings update step."""
+    async def async_step_general(self, user_input: dict[str, Any] | None = None):
+        """Handle general settings update step.
+
+        Title/description/labels from translations:
+          config.step.general.title / description / data.*
+        """
         if user_input is not None:
             self.hass.config_entries.async_update_entry(
                 self.config_entry,
@@ -143,19 +156,32 @@ class LrtWallboxOptionsFlow(config_entries.OptionsFlow):
             ),
         )
 
-    async def async_step_start_scan(self, user_input=None):
-        """Start scanning for a new RFID tag."""
+    async def async_step_start_scan(self, user_input: dict[str, Any] | None = None):
+        """Start scanning for a new RFID tag.
+
+        Abort reasons & placeholders from translations:
+          config.abort.rfid_scan_failed
+        """
         executor: WallboxClientExecutor = self.hass.data[DOMAIN][
             self.config_entry.entry_id
         ]["executor"]
         try:
             self.tag_id = await executor.call("rfid_scan")
         except WallboxError as e:
-            return self.async_abort(reason=f"Error scanning RFID: {e.message}")
+            return self.async_abort(
+                reason="rfid_scan_failed",
+                description_placeholders={"error": e.message},
+            )
         return await self.async_step_enter_name()
 
-    async def async_step_enter_name(self, user_input=None):
-        """Prompt for a name for the new RFID tag."""
+    async def async_step_enter_name(self, user_input: dict[str, Any] | None = None):
+        """Prompt for a name for the new RFID tag.
+
+        Title/labels from translations:
+          config.step.enter_name.title / data.name
+          Abort reasons:
+          - config.abort.rfid_add_failed
+        """
         if user_input is not None:
             executor: WallboxClientExecutor = self.hass.data[DOMAIN][
                 self.config_entry.entry_id
@@ -163,10 +189,11 @@ class LrtWallboxOptionsFlow(config_entries.OptionsFlow):
             try:
                 await executor.call("rfid_add", self.tag_id, user_input["name"])
             except WallboxError as e:
-                return self.async_abort(reason=f"Error adding RFID: {e.message}")
-            return self.async_create_entry(
-                title=f"RFID Tag '{user_input['name']}' added", data={}
-            )
+                return self.async_abort(
+                    reason="rfid_add_failed",
+                    description_placeholders={"error": e.message},
+                )
+            return self.async_create_entry(title="RFID tag added", data={})
 
         return self.async_show_form(
             step_id="enter_name",
@@ -177,8 +204,16 @@ class LrtWallboxOptionsFlow(config_entries.OptionsFlow):
             ),
         )
 
-    async def async_step_rfid_delete(self, user_input=None):
-        """Handle deletion of an RFID tag."""
+    async def async_step_rfid_delete(self, user_input: dict[str, Any] | None = None):
+        """Handle deletion of an RFID tag.
+
+        Title/description/labels from translations:
+          config.step.rfid_delete.title / description / data.tag_id
+          Abort reasons:
+          - config.abort.rfid_delete_failed
+          - config.abort.rfid_empty
+          - config.abort.rfid_not_found
+        """
         executor: WallboxClientExecutor = self.hass.data[DOMAIN][
             self.config_entry.entry_id
         ]["executor"]
@@ -186,9 +221,12 @@ class LrtWallboxOptionsFlow(config_entries.OptionsFlow):
         try:
             rfid_tags = await executor.call("rfid_get")
         except WallboxError as e:
-            return self.async_abort(reason=f"Error getting RFID tags: {e.message}")
+            return self.async_abort(
+                reason="rfid_delete_failed",
+                description_placeholders={"error": e.message},
+            )
         if not rfid_tags:
-            return self.async_abort(reason="No RFID tags found")
+            return self.async_abort(reason="rfid_empty")
 
         tag_choices = {
             tag_id_to_hex(tag.tagId): f"{tag_id_to_hex(tag.tagId)} - {tag.name}"
@@ -207,16 +245,17 @@ class LrtWallboxOptionsFlow(config_entries.OptionsFlow):
             )
 
             if selected_tag is None:
-                return self.async_abort(reason="Tag ID not found")
+                return self.async_abort(reason="rfid_not_found")
 
             try:
                 await executor.call("rfid_delete", selected_tag.tagId)
             except WallboxError as e:
-                return self.async_abort(reason=f"Error deleting RFID: {e.message}")
+                return self.async_abort(
+                    reason="rfid_delete_failed",
+                    description_placeholders={"error": e.message},
+                )
 
-            return self.async_create_entry(
-                title=f"RFID Tag '{selected_tag.name}' deleted", data={}
-            )
+            return self.async_create_entry(title="RFID tag deleted", data={})
 
         return self.async_show_form(
             step_id="rfid_delete",
@@ -225,8 +264,5 @@ class LrtWallboxOptionsFlow(config_entries.OptionsFlow):
                     vol.Required("tag_id"): vol.In(tag_choices),
                 }
             ),
-            description_placeholders={
-                "warning": "Deleting an RFID tag will remove it permanently. Make sure you want to proceed."
-            },
             last_step=True,
         )

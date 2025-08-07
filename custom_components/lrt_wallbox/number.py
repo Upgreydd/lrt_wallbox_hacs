@@ -1,4 +1,4 @@
-"""This module defines a number entity for controlling the maximum current limit."""
+"""Number entity for controlling the maximum current limit."""
 
 from __future__ import annotations
 
@@ -25,9 +25,9 @@ MIN_CURRENT = 6
 
 
 async def async_setup_entry(
-    hass: HomeAssistant,
-    entry: ConfigEntry,
-    async_add_entities: AddEntitiesCallback,
+        hass: HomeAssistant,
+        entry: ConfigEntry,
+        async_add_entities: AddEntitiesCallback,
 ) -> None:
     """Set up Wallbox number entities from a config entry."""
     data = hass.data[DOMAIN][entry.entry_id]
@@ -43,17 +43,17 @@ class WallboxLoadLimitNumber(CoordinatorEntity, WallboxBaseEntity, NumberEntity)
     """Representation of a Wallbox max load number entity."""
 
     _attr_has_entity_name = True
-    _attr_name = "Max Current Limit"
+    _attr_translation_key = "max_current"
     _attr_icon = "mdi:flash"
     _attr_native_unit_of_measurement = "A"
     _attr_entity_category = EntityCategory.CONFIG
     _attr_mode = NumberMode.SLIDER
 
     def __init__(
-        self,
-        coordinator: DataUpdateCoordinator,
-        executor: WallboxClientExecutor,
-        max_load: int,
+            self,
+            coordinator: DataUpdateCoordinator,
+            executor: WallboxClientExecutor,
+            max_load: int,
     ) -> None:
         """Initialize the Wallbox max load number entity."""
         super().__init__(coordinator)
@@ -70,6 +70,7 @@ class WallboxLoadLimitNumber(CoordinatorEntity, WallboxBaseEntity, NumberEntity)
             await self.executor.call(
                 "config_load_set", int(value), priority=1, timeout=15
             )
+            self.executor.data[ATTR_MAX_CURRENT] = int(value)
         except TimeoutError:
             _LOGGER.warning("config_load_set timed out; will refresh state anyway")
         except Exception as e:

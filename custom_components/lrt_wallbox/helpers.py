@@ -170,6 +170,7 @@ async def update_status(executor: WallboxClientExecutor) -> dict[str, Any]:
         is_error = await executor.call("atmel_error_get", priority=10)
         network_status = await executor.call("config_network_status", priority=10)
         transaction_status = await executor.call("transaction_get", priority=10)
+        load_get = await executor.call("config_load_get", priority=10)
 
         old_data = executor.data
         result = {
@@ -181,7 +182,7 @@ async def update_status(executor: WallboxClientExecutor) -> dict[str, Any]:
             ATTR_SETUP_STATUS_MAX_CHARGING_POWER: executor.data.get(
                 ATTR_SETUP_STATUS_MAX_CHARGING_POWER
             ),
-            ATTR_MAX_CURRENT: executor.data.get(ATTR_MAX_CURRENT),
+            ATTR_MAX_CURRENT: load_get.maxCurrent,
             ATTR_ATMEL_ERROR: bool(is_error.error),
             ATTR_NETWORK_STATUS_ETHERNET: network_status.ethernet == "Connected",
             ATTR_NETWORK_STATUS_WLAN: network_status.wlan == "Connected",

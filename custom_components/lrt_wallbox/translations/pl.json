@@ -1,0 +1,131 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Konfiguracja LRT Wallbox",
+        "description": "Skonfiguruj połączenie z ładowarką LRT Wallbox.",
+        "data": {
+          "name": "Nazwa",
+          "host": "Adres IP",
+          "username": "Użytkownik",
+          "password": "Hasło",
+          "max_load": "Maksymalny prąd (A)"
+        }
+      },
+      "init": {
+        "title": "Opcje",
+        "description": "Wybierz akcję do wykonania.",
+        "data": {
+          "choice": "Akcja"
+        }
+      },
+      "general": {
+        "title": "Aktualizacja ustawień Wallbox",
+        "description": "Edytuj połączenie i miękki limit prądu.",
+        "data": {
+          "name": "Nazwa",
+          "host": "Adres IP",
+          "username": "Użytkownik",
+          "password": "Hasło",
+          "max_load": "Maksymalny prąd (A)"
+        }
+      },
+      "enter_name": {
+        "title": "Nazwa tagu RFID",
+        "data": {
+          "name": "Nazwa"
+        }
+      },
+      "rfid_delete": {
+        "title": "Usuń tag RFID",
+        "description": "Usunięcie tagu RFID spowoduje trwałe jego usunięcie.",
+        "data": {
+          "tag_id": "ID tagu"
+        }
+      }
+    },
+    "error": {
+      "rfid_scan_failed": "Błąd skanowania RFID: {error}",
+      "rfid_add_failed": "Błąd dodawania RFID: {error}",
+      "rfid_delete_failed": "Błąd usuwania RFID: {error}",
+      "rfid_not_found": "Nie znaleziono tagu",
+      "rfid_empty": "Brak zapisanych tagów RFID"
+    },
+    "abort": {
+      "rfid_scan_failed": "Błąd skanowania RFID: {error}",
+      "rfid_add_failed": "Błąd dodawania RFID: {error}",
+      "rfid_delete_failed": "Błąd usuwania RFID: {error}",
+      "rfid_not_found": "Nie znaleziono tagu",
+      "rfid_empty": "Brak zapisanych tagów RFID"
+    }
+  },
+  "entity": {
+    "button": {
+      "restart_wallbox": {
+        "name": "Uruchom ponownie Wallbox"
+      }
+    },
+    "number": {
+      "max_current": {
+        "name": "Limit prądu"
+      }
+    },
+    "switch": {
+      "charging": {
+        "name": "Ładowanie"
+      }
+    },
+    "sensor": {
+      "esp_fw": {
+        "name": "Oprogramowanie ESP"
+      },
+      "atmel_fw": {
+        "name": "Oprogramowanie Atmel"
+      },
+      "serial_number": {
+        "name": "Numer seryjny"
+      },
+      "charger_status": {
+        "name": "Status ładowarki"
+      },
+      "charger_current_rate": {
+        "name": "Aktualny prąd ładowania"
+      },
+      "charger_seconds_since_start": {
+        "name": "Czas od rozpoczęcia ładowania"
+      },
+      "charger_current_energy": {
+        "name": "Aktualna energia ładowania"
+      },
+      "last_transaction_start_time": {
+        "name": "Czas rozpoczęcia ostatniej sesji"
+      },
+      "last_transaction_end_time": {
+        "name": "Czas zakończenia ostatniej sesji"
+      },
+      "last_transaction_energy": {
+        "name": "Energia ostatniej sesji"
+      }
+    },
+    "binary_sensor": {
+      "network_status_wlan": {
+        "name": "Status sieci (Wi‑Fi)"
+      },
+      "network_status_ethernet": {
+        "name": "Status sieci (Ethernet)"
+      },
+      "setup_status_network": {
+        "name": "Status konfiguracji (Sieć)"
+      },
+      "setup_status_ambientLight": {
+        "name": "Status konfiguracji (Oświetlenie otoczenia)"
+      },
+      "setup_status_maxChargingPower": {
+        "name": "Status konfiguracji (Maksymalna moc ładowania)"
+      },
+      "atmel_error": {
+        "name": "Status Atmel"
+      }
+    }
+  }
+}

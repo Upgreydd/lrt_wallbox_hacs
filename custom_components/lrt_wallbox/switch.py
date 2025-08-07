@@ -15,8 +15,13 @@ from homeassistant.helpers.update_coordinator import (
 )
 from lrt_wallbox import WallboxError
 
-from .const import DOMAIN, ATTR_CHARGER_IS_CHARGING, ATTR_LAST_TRANSACTION_START_TIME, ATTR_LAST_TRANSACTION_END_TIME, \
-    ATTR_LAST_TRANSACTION_ENERGY
+from .const import (
+    DOMAIN,
+    ATTR_CHARGER_IS_CHARGING,
+    ATTR_LAST_TRANSACTION_START_TIME,
+    ATTR_LAST_TRANSACTION_END_TIME,
+    ATTR_LAST_TRANSACTION_ENERGY,
+)
 from .entity import WallboxBaseEntity
 from .helpers import WallboxClientExecutor
 
@@ -24,9 +29,9 @@ _LOGGER = logging.getLogger(__name__)
 
 
 async def async_setup_entry(
-    hass: HomeAssistant,
-    entry: ConfigEntry,
-    async_add_entities: AddEntitiesCallback,
+        hass: HomeAssistant,
+        entry: ConfigEntry,
+        async_add_entities: AddEntitiesCallback,
 ) -> None:
     """Set up the Wallbox switch entity."""
     data = hass.data[DOMAIN][entry.entry_id]
@@ -40,7 +45,7 @@ class WallboxChargeSwitch(CoordinatorEntity, WallboxBaseEntity, SwitchEntity):
     """Switch to start/stop Wallbox charging."""
 
     _attr_has_entity_name = True
-    _attr_name = "Charging"
+    _attr_translation_key = "charging"
     _attr_icon = "mdi:ev-station"
 
     def __init__(self, coordinator, executor: WallboxClientExecutor):
@@ -54,7 +59,7 @@ class WallboxChargeSwitch(CoordinatorEntity, WallboxBaseEntity, SwitchEntity):
         _LOGGER.debug("Starting charging")
         first_tag = await self.executor.call("rfid_get", priority=1)
         await self.executor.call("transaction_start", first_tag[0].tagId, priority=1)
-        self.executor.data[ATTR_CHARGER_IS_CHARGING] = False
+        self.executor.data[ATTR_CHARGER_IS_CHARGING] = True
         await self.coordinator.async_request_refresh()
 
     async def async_turn_off(self, **kwargs) -> None:

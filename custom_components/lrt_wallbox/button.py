@@ -16,7 +16,7 @@ _LOGGER = logging.getLogger(__name__)
 
 
 async def async_setup_entry(
-    hass: HomeAssistant, entry: ConfigEntry, async_add_entities: AddEntitiesCallback
+        hass: HomeAssistant, entry: ConfigEntry, async_add_entities: AddEntitiesCallback
 ) -> None:
     """Set up the Wallbox button entity."""
     data = hass.data[DOMAIN][entry.entry_id]
@@ -28,8 +28,8 @@ async def async_setup_entry(
 class RestartWallboxButton(WallboxBaseEntity, ButtonEntity):
     """Button to restart the Wallbox."""
 
-    _attr_name = "Restart Wallbox"
     _attr_has_entity_name = True
+    _attr_translation_key = "restart_wallbox"
     _attr_icon = "mdi:restart"
     _attr_entity_category = EntityCategory.CONFIG
 
@@ -49,5 +49,5 @@ class RestartWallboxButton(WallboxBaseEntity, ButtonEntity):
     def available(self) -> bool:
         """Return True if the button is available."""
         return (
-            self.executor.last_update_success and ATTR_SERIAL_NUMBER in self.executor.data
+                self.executor.last_update_success and ATTR_SERIAL_NUMBER in self.executor.data
         )

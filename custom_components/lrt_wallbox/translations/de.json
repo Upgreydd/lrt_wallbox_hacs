@@ -1,0 +1,131 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "LRT Wallbox konfigurieren",
+        "description": "Verbindung zu Ihrem LRT Wallbox Ladegerät einrichten.",
+        "data": {
+          "name": "Name",
+          "host": "Host",
+          "username": "Benutzername",
+          "password": "Passwort",
+          "max_load": "Maximaler Strom (A)"
+        }
+      },
+      "init": {
+        "title": "Optionen",
+        "description": "Wählen Sie eine auszuführende Aktion.",
+        "data": {
+          "choice": "Aktion"
+        }
+      },
+      "general": {
+        "title": "Wallbox-Einstellungen aktualisieren",
+        "description": "Verbindung und weiche Strombegrenzung bearbeiten.",
+        "data": {
+          "name": "Name",
+          "host": "Host",
+          "username": "Benutzername",
+          "password": "Passwort",
+          "max_load": "Maximaler Strom (A)"
+        }
+      },
+      "enter_name": {
+        "title": "RFID-Tag-Name",
+        "data": {
+          "name": "Name"
+        }
+      },
+      "rfid_delete": {
+        "title": "RFID-Tag löschen",
+        "description": "Das Löschen eines RFID-Tags entfernt es dauerhaft.",
+        "data": {
+          "tag_id": "Tag-ID"
+        }
+      }
+    },
+    "error": {
+      "rfid_scan_failed": "Fehler beim Scannen von RFID: {error}",
+      "rfid_add_failed": "Fehler beim Hinzufügen von RFID: {error}",
+      "rfid_delete_failed": "Fehler beim Löschen von RFID: {error}",
+      "rfid_not_found": "Tag-ID nicht gefunden",
+      "rfid_empty": "Keine RFID-Tags gefunden"
+    },
+    "abort": {
+      "rfid_scan_failed": "Fehler beim Scannen von RFID: {error}",
+      "rfid_add_failed": "Fehler beim Hinzufügen von RFID: {error}",
+      "rfid_delete_failed": "Fehler beim Löschen von RFID: {error}",
+      "rfid_not_found": "Tag-ID nicht gefunden",
+      "rfid_empty": "Keine RFID-Tags gefunden"
+    }
+  },
+  "entity": {
+    "button": {
+      "restart_wallbox": {
+        "name": "Wallbox neu starten"
+      }
+    },
+    "number": {
+      "max_current": {
+        "name": "Maximale Stromstärke"
+      }
+    },
+    "switch": {
+      "charging": {
+        "name": "Laden"
+      }
+    },
+    "sensor": {
+      "esp_fw": {
+        "name": "ESP-Firmware"
+      },
+      "atmel_fw": {
+        "name": "Atmel-Firmware"
+      },
+      "serial_number": {
+        "name": "Seriennummer"
+      },
+      "charger_status": {
+        "name": "Ladestatus"
+      },
+      "charger_current_rate": {
+        "name": "Aktueller Ladestrom"
+      },
+      "charger_seconds_since_start": {
+        "name": "Sekunden seit Ladebeginn"
+      },
+      "charger_current_energy": {
+        "name": "Aktuelle Ladeenergie"
+      },
+      "last_transaction_start_time": {
+        "name": "Startzeit der letzten Sitzung"
+      },
+      "last_transaction_end_time": {
+        "name": "Endzeit der letzten Sitzung"
+      },
+      "last_transaction_energy": {
+        "name": "Energie der letzten Sitzung"
+      }
+    },
+    "binary_sensor": {
+      "network_status_wlan": {
+        "name": "Netzwerkstatus (WLAN)"
+      },
+      "network_status_ethernet": {
+        "name": "Netzwerkstatus (Ethernet)"
+      },
+      "setup_status_network": {
+        "name": "Setup-Status (Netzwerk)"
+      },
+      "setup_status_ambientLight": {
+        "name": "Setup-Status (Umgebungslicht)"
+      },
+      "setup_status_maxChargingPower": {
+        "name": "Setup-Status (Maximale Ladeleistung)"
+      },
+      "atmel_error": {
+        "name": "Atmel-Status"
+      }
+    }
+  }
+}

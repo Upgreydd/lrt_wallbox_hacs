@@ -15,8 +15,13 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from . import ATTR_SETUP_STATUS_NETWORK, ATTR_SETUP_STATUS_MAX_CHARGING_POWER
-from .const import DOMAIN, ATTR_SETUP_STATUS_AMBIENT_LIGHT, ATTR_ATMEL_ERROR, ATTR_NETWORK_STATUS_ETHERNET, \
-    ATTR_NETWORK_STATUS_WLAN
+from .const import (
+    DOMAIN,
+    ATTR_SETUP_STATUS_AMBIENT_LIGHT,
+    ATTR_ATMEL_ERROR,
+    ATTR_NETWORK_STATUS_ETHERNET,
+    ATTR_NETWORK_STATUS_WLAN,
+)
 from .entity import WallboxBaseEntity
 from .helpers import WallboxClientExecutor
 
@@ -24,38 +29,32 @@ _LOGGER = logging.getLogger(__name__)
 
 SENSOR_DEFINITIONS: dict[str, dict[str, Any]] = {
     ATTR_NETWORK_STATUS_WLAN: {
-        "name": "Network Status (WLAN)",
-        "translation_key": ATTR_NETWORK_STATUS_WLAN,
+        "translation_key": "network_status_wlan",
         "icon": "mdi:wifi",
         "device_class": BinarySensorDeviceClass.CONNECTIVITY,
     },
     ATTR_NETWORK_STATUS_ETHERNET: {
-        "name": "Network Status (Ethernet)",
-        "translation_key": ATTR_NETWORK_STATUS_ETHERNET,
+        "translation_key": "network_status_ethernet",
         "icon": "mdi:ethernet",
         "device_class": BinarySensorDeviceClass.CONNECTIVITY,
     },
     ATTR_SETUP_STATUS_NETWORK: {
-        "name": "Setup Status (Network)",
-        "translation_key": ATTR_SETUP_STATUS_NETWORK,
+        "translation_key": "setup_status_network",
         "icon": "mdi:network",
         "device_class": BinarySensorDeviceClass.PROBLEM,
     },
     ATTR_SETUP_STATUS_AMBIENT_LIGHT: {
-        "name": "Setup Status (Ambient Light)",
-        "translation_key": ATTR_SETUP_STATUS_AMBIENT_LIGHT,
+        "translation_key": "setup_status_ambientLight",
         "icon": "mdi:weather-night",
         "device_class": BinarySensorDeviceClass.PROBLEM,
     },
     ATTR_SETUP_STATUS_MAX_CHARGING_POWER: {
-        "name": "Setup Status (Max Charging Power)",
-        "translation_key": ATTR_SETUP_STATUS_MAX_CHARGING_POWER,
+        "translation_key": "setup_status_maxChargingPower",
         "icon": "mdi:flash",
         "device_class": BinarySensorDeviceClass.PROBLEM,
     },
     ATTR_ATMEL_ERROR: {
-        "name": "Atmel Status",
-        "translation_key": ATTR_ATMEL_ERROR,
+        "translation_key": "atmel_error",
         "icon": "mdi:alert-circle",
         "device_class": BinarySensorDeviceClass.PROBLEM,
     },
@@ -63,9 +62,9 @@ SENSOR_DEFINITIONS: dict[str, dict[str, Any]] = {
 
 
 async def async_setup_entry(
-    hass: HomeAssistant,
-    entry: ConfigEntry,
-    async_add_entities: AddEntitiesCallback,
+        hass: HomeAssistant,
+        entry: ConfigEntry,
+        async_add_entities: AddEntitiesCallback,
 ) -> None:
     """Set up binary sensors."""
     data = hass.data[DOMAIN][entry.entry_id]
@@ -88,7 +87,6 @@ class StatusBinarySensor(WallboxBaseEntity, BinarySensorEntity):
         definition = SENSOR_DEFINITIONS[key]
         self._key = key
         self._attr_icon = definition.get("icon")
-        self._attr_name = definition["name"]
         self._attr_translation_key = definition["translation_key"]
         self._attr_unique_id = f"{executor.config_entry.entry_id}_{key}"
         self._attr_device_class = definition["device_class"]
