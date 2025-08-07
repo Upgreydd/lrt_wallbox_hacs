@@ -15,7 +15,8 @@ from homeassistant.helpers.update_coordinator import (
 )
 from lrt_wallbox import WallboxError
 
-from .const import DOMAIN
+from .const import DOMAIN, ATTR_CHARGER_IS_CHARGING, ATTR_LAST_TRANSACTION_START_TIME, ATTR_LAST_TRANSACTION_END_TIME, \
+    ATTR_LAST_TRANSACTION_ENERGY
 from .entity import WallboxBaseEntity
 from .helpers import WallboxClientExecutor
 
@@ -53,7 +54,7 @@ class WallboxChargeSwitch(CoordinatorEntity, WallboxBaseEntity, SwitchEntity):
         _LOGGER.debug("Starting charging")
         first_tag = await self.executor.call("rfid_get", priority=1)
         await self.executor.call("transaction_start", first_tag[0].tagId, priority=1)
-        self.executor.data["charger_is_charging"] = False
+        self.executor.data[ATTR_CHARGER_IS_CHARGING] = False
         await self.coordinator.async_request_refresh()
 
     async def async_turn_off(self, **kwargs) -> None:
@@ -67,23 +68,23 @@ class WallboxChargeSwitch(CoordinatorEntity, WallboxBaseEntity, SwitchEntity):
             end_dt = datetime.strptime(
                 transaction_time.endTime, "%Y-%m-%d %H:%M:%S %Z"
             ).replace(tzinfo=UTC)
-            self.executor.data["last_transaction_start_time"] = start_dt
-            self.executor.data["last_transaction_end_time"] = end_dt
-            self.executor.data["last_transaction_energy"] = round(
+            self.executor.data[ATTR_LAST_TRANSACTION_START_TIME] = start_dt
+            self.executor.data[ATTR_LAST_TRANSACTION_END_TIME] = end_dt
+            self.executor.data[ATTR_LAST_TRANSACTION_ENERGY] = round(
                 transaction_time.energy / 1000, 2
             )  # Convert Wh to kWh
 
         except WallboxError as e:
             if e.kind == "NotFound":
                 _LOGGER.warning("No active transaction found to stop")
-        self.executor.data["charger_is_charging"] = False
+        self.executor.data[ATTR_CHARGER_IS_CHARGING] = False
         await self.executor.save_persistent_data()
         await self.coordinator.async_request_refresh()
 
     @property
     def is_on(self) -> bool:
         """Return True if charging is active."""
-        return bool(self.executor.data.get("charger_is_charging", False))
+        return bool(self.executor.data.get(ATTR_CHARGER_IS_CHARGING, False))
 
     @property
     def available(self) -> bool:

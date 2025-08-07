@@ -4,7 +4,7 @@ import logging
 
 from homeassistant.components.button import ButtonEntity
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import EntityCategory
+from homeassistant.const import EntityCategory, ATTR_SERIAL_NUMBER
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
@@ -49,5 +49,5 @@ class RestartWallboxButton(WallboxBaseEntity, ButtonEntity):
     def available(self) -> bool:
         """Return True if the button is available."""
         return (
-            self.executor.last_update_success and "serial_number" in self.executor.data
+            self.executor.last_update_success and ATTR_SERIAL_NUMBER in self.executor.data
         )

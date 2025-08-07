@@ -14,46 +14,48 @@ from homeassistant.const import EntityCategory
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
-from .const import DOMAIN
+from . import ATTR_SETUP_STATUS_NETWORK, ATTR_SETUP_STATUS_MAX_CHARGING_POWER
+from .const import DOMAIN, ATTR_SETUP_STATUS_AMBIENT_LIGHT, ATTR_ATMEL_ERROR, ATTR_NETWORK_STATUS_ETHERNET, \
+    ATTR_NETWORK_STATUS_WLAN
 from .entity import WallboxBaseEntity
 from .helpers import WallboxClientExecutor
 
 _LOGGER = logging.getLogger(__name__)
 
 SENSOR_DEFINITIONS: dict[str, dict[str, Any]] = {
-    "network_status_wlan": {
+    ATTR_NETWORK_STATUS_WLAN: {
         "name": "Network Status (WLAN)",
-        "translation_key": "network_status_wlan",
+        "translation_key": ATTR_NETWORK_STATUS_WLAN,
         "icon": "mdi:wifi",
         "device_class": BinarySensorDeviceClass.CONNECTIVITY,
     },
-    "network_status_ethernet": {
+    ATTR_NETWORK_STATUS_ETHERNET: {
         "name": "Network Status (Ethernet)",
-        "translation_key": "network_status_ethernet",
+        "translation_key": ATTR_NETWORK_STATUS_ETHERNET,
         "icon": "mdi:ethernet",
         "device_class": BinarySensorDeviceClass.CONNECTIVITY,
     },
-    "setup_status_network": {
+    ATTR_SETUP_STATUS_NETWORK: {
         "name": "Setup Status (Network)",
-        "translation_key": "setup_status_network",
+        "translation_key": ATTR_SETUP_STATUS_NETWORK,
         "icon": "mdi:network",
         "device_class": BinarySensorDeviceClass.PROBLEM,
     },
-    "setup_status_ambientLight": {
+    ATTR_SETUP_STATUS_AMBIENT_LIGHT: {
         "name": "Setup Status (Ambient Light)",
-        "translation_key": "setup_status_ambientLight",
+        "translation_key": ATTR_SETUP_STATUS_AMBIENT_LIGHT,
         "icon": "mdi:weather-night",
         "device_class": BinarySensorDeviceClass.PROBLEM,
     },
-    "setup_status_maxChargingPower": {
+    ATTR_SETUP_STATUS_MAX_CHARGING_POWER: {
         "name": "Setup Status (Max Charging Power)",
-        "translation_key": "setup_status_maxChargingPower",
+        "translation_key": ATTR_SETUP_STATUS_MAX_CHARGING_POWER,
         "icon": "mdi:flash",
         "device_class": BinarySensorDeviceClass.PROBLEM,
     },
-    "atmel_error": {
+    ATTR_ATMEL_ERROR: {
         "name": "Atmel Status",
-        "translation_key": "atmel_error",
+        "translation_key": ATTR_ATMEL_ERROR,
         "icon": "mdi:alert-circle",
         "device_class": BinarySensorDeviceClass.PROBLEM,
     },

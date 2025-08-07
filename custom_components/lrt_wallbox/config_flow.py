@@ -8,9 +8,10 @@ from homeassistant import config_entries
 from homeassistant.config_entries import ConfigEntry, ConfigFlowResult, OptionsFlow
 from homeassistant.core import callback
 from lrt_wallbox import WallboxError
-
-from .const import DOMAIN
+from .const import CONF_MAX_LOAD, DOMAIN
+from homeassistant.const import CONF_USERNAME, CONF_PASSWORD, CONF_HOST, CONF_NAME
 from .helpers import WallboxClientExecutor, tag_id_to_hex
+from homeassistant.helpers import config_validation as cv
 
 
 def general_data_schema(current=None):
@@ -19,20 +20,20 @@ def general_data_schema(current=None):
         current = {}
     return vol.Schema(
         {
-            vol.Required("name", default=current.get("name", "LRT Wallbox")): vol.All(
-                str, vol.Length(min=3, max=20)
+            vol.Required(CONF_NAME, default=current.get(CONF_NAME, "LRT Wallbox")): vol.All(
+                cv.string, vol.Length(min=3, max=20)
             ),
-            vol.Required("host", default=current.get("host")): vol.All(
-                str, vol.Length(min=7, max=15)
+            vol.Required(CONF_HOST, default=current.get(CONF_HOST)): vol.All(
+                cv.string, vol.Length(min=7, max=15)
             ),
-            vol.Required("username", default=current.get("username")): vol.All(
-                str, vol.Length(min=3, max=20)
+            vol.Required(CONF_USERNAME, default=current.get(CONF_USERNAME)): vol.All(
+                cv.string, vol.Length(min=3, max=20)
             ),
-            vol.Required("password", default=current.get("password")): vol.All(
-                str, vol.Length(min=3, max=20)
+            vol.Required(CONF_PASSWORD, default=current.get(CONF_PASSWORD)): vol.All(
+                cv.string, vol.Length(min=3, max=20)
             ),
-            vol.Required("max_load", default=current.get("max_load", 16)): vol.All(
-                int, vol.Range(min=6, max=32)
+            vol.Required(CONF_MAX_LOAD, default=current.get(CONF_MAX_LOAD, 16)): vol.All(
+                cv.positive_int, vol.Range(min=6, max=32)
             ),
         }
     )
@@ -51,13 +52,13 @@ class LrtWallboxConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         """Handle the initial step of the config flow."""
         if user_input is not None:
             return self.async_create_entry(
-                title=f"LRT Wallbox @ {user_input['host']} (user: {user_input['username']})",
+                title=f"LRT Wallbox @ {user_input[CONF_HOST]} (user: {user_input[CONF_USERNAME]})",
                 data={
-                    "name": user_input["name"],
-                    "host": user_input["host"],
-                    "username": user_input["username"],
-                    "password": user_input["password"],
-                    "max_load": user_input["max_load"],
+                    CONF_NAME: user_input[CONF_NAME],
+                    CONF_HOST: user_input[CONF_HOST],
+                    CONF_USERNAME: user_input[CONF_USERNAME],
+                    CONF_PASSWORD: user_input[CONF_PASSWORD],
+                    CONF_MAX_LOAD: user_input[CONF_MAX_LOAD],
                 },
                 options={},
             )
@@ -66,13 +67,17 @@ class LrtWallboxConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             data_schema=self.DATA_SCHEMA,
             errors={},
             description_placeholders={
-                "name": "Custom name for your wallbox",
-                "host": "IP address of your wallbox",
-                "username": "Username set while configuring wallbox over LRT PowerUP",
-                "password": "Password received while configuring wallbox over LRT PowerUP",
-                "max_load": "Max load (soft limiter) for your wallbox in Amper",
+                CONF_NAME: "Custom name for your wallbox",
+                CONF_HOST: "IP address of your wallbox",
+                CONF_USERNAME: "Username set while configuring wallbox over LRT PowerUP",
+                CONF_PASSWORD: "Password received while configuring wallbox over LRT PowerUP",
+                CONF_MAX_LOAD: "Max load (soft limiter) for your wallbox in Amper",
             },
         )
+
+    async def async_step_import(self, user_input: dict[str, Any]) -> ConfigFlowResult:
+        """Handle import from YAML configuration."""
+        return await self.async_step_user(user_input)
 
     @staticmethod
     @callback
@@ -121,11 +126,11 @@ class LrtWallboxOptionsFlow(config_entries.OptionsFlow):
             self.hass.config_entries.async_update_entry(
                 self.config_entry,
                 data={
-                    "name": user_input["name"],
-                    "host": user_input["host"],
-                    "username": user_input["username"],
-                    "password": user_input["password"],
-                    "max_load": user_input["max_load"],
+                    CONF_NAME: user_input[CONF_NAME],
+                    CONF_HOST: user_input[CONF_HOST],
+                    CONF_USERNAME: user_input[CONF_USERNAME],
+                    CONF_PASSWORD: user_input[CONF_PASSWORD],
+                    CONF_MAX_LOAD: user_input[CONF_MAX_LOAD],
                 },
             )
             await self.hass.config_entries.async_reload(self.config_entry.entry_id)

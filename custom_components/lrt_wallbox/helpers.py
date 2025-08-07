@@ -14,8 +14,13 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.storage import Store
 from lrt_wallbox import WallboxError
+from homeassistant.const import ATTR_SERIAL_NUMBER
 
-from .const import DOMAIN
+from . import ATTR_ATMEL_FW, ATTR_SETUP_STATUS_AMBIENT_LIGHT, ATTR_SETUP_STATUS_MAX_CHARGING_POWER
+from .const import DOMAIN, ATTR_MAX_CURRENT, ATTR_ESP_FW, ATTR_SETUP_STATUS_NETWORK, ATTR_ATMEL_ERROR, \
+    ATTR_NETWORK_STATUS_ETHERNET, ATTR_NETWORK_STATUS_WLAN, ATTR_CHARGER_STATUS, ATTR_CHARGER_IS_CHARGING, \
+    ATTR_CHARGER_CURRENT_RATE, ATTR_CHARGER_SECONDS_SINCE_START, ATTR_CHARGER_CURRENT_ENERGY, \
+    ATTR_LAST_TRANSACTION_START_TIME, ATTR_LAST_TRANSACTION_END_TIME, ATTR_LAST_TRANSACTION_ENERGY
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -53,13 +58,13 @@ class WallboxClientExecutor:
 
         await self._store.async_save(
             {
-                "last_transaction_start_time": dt_iso(
-                    self.data.get("last_transaction_start_time")
+                ATTR_LAST_TRANSACTION_START_TIME: dt_iso(
+                    self.data.get(ATTR_LAST_TRANSACTION_START_TIME)
                 ),
-                "last_transaction_end_time": dt_iso(
-                    self.data.get("last_transaction_end_time")
+                ATTR_LAST_TRANSACTION_END_TIME: dt_iso(
+                    self.data.get(ATTR_LAST_TRANSACTION_END_TIME)
                 ),
-                "last_transaction_energy": self.data.get("last_transaction_energy"),
+                ATTR_LAST_TRANSACTION_ENERGY: self.data.get(ATTR_LAST_TRANSACTION_ENERGY),
             }
         )
 
@@ -68,13 +73,13 @@ class WallboxClientExecutor:
         stored = await self._store.async_load()
         if stored:
             try:
-                if "last_transaction_start_time" in stored:
-                    stored["last_transaction_start_time"] = datetime.fromisoformat(
-                        stored["last_transaction_start_time"]
+                if ATTR_LAST_TRANSACTION_START_TIME in stored:
+                    stored[ATTR_LAST_TRANSACTION_START_TIME] = datetime.fromisoformat(
+                        stored[ATTR_LAST_TRANSACTION_START_TIME]
                     )
-                if "last_transaction_end_time" in stored:
-                    stored["last_transaction_end_time"] = datetime.fromisoformat(
-                        stored["last_transaction_end_time"]
+                if ATTR_LAST_TRANSACTION_END_TIME in stored:
+                    stored[ATTR_LAST_TRANSACTION_END_TIME] = datetime.fromisoformat(
+                        stored[ATTR_LAST_TRANSACTION_END_TIME]
                     )
             except Exception as e:  # noqa: BLE001
                 _LOGGER.warning("Failed to parse stored timestamps: %s", e)
@@ -168,28 +173,26 @@ async def update_status(executor: WallboxClientExecutor) -> dict[str, Any]:
 
         old_data = executor.data
         result = {
-            "serial_number": executor.data.get("serial_number"),
-            "esp_fw": executor.data.get("esp_fw"),
-            "atmel_fw": executor.data.get("atmel_fw"),
-            "setup_status_network": executor.data.get("setup_status_network"),
-            "setup_status_ambientLight": executor.data.get("setup_status_ambientLight"),
-            "setup_status_maxChargingPower": executor.data.get(
-                "setup_status_maxChargingPower"
+            ATTR_SERIAL_NUMBER: executor.data.get(ATTR_SERIAL_NUMBER),
+            ATTR_ESP_FW: executor.data.get(ATTR_ESP_FW),
+            ATTR_ATMEL_FW: executor.data.get(ATTR_ATMEL_FW),
+            ATTR_SETUP_STATUS_NETWORK: executor.data.get(ATTR_SETUP_STATUS_NETWORK),
+            ATTR_SETUP_STATUS_AMBIENT_LIGHT: executor.data.get(ATTR_SETUP_STATUS_AMBIENT_LIGHT),
+            ATTR_SETUP_STATUS_MAX_CHARGING_POWER: executor.data.get(
+                ATTR_SETUP_STATUS_MAX_CHARGING_POWER
             ),
-            "max_current": executor.data.get("max_current"),
-            "atmel_error": bool(is_error.error),
-            "network_status_ethernet": network_status.ethernet == "Connected",
-            "network_status_wlan": network_status.wlan == "Connected",
-            "charger_status": transaction_status.ocppCpState,
-            "charger_is_charging": transaction_status.ocppCpState != "Available",
-            "charger_current_rate": transaction_status.currentChargeRate,
-            "charger_seconds_since_start": transaction_status.secondsSinceChargeStart,
-            "charger_current_energy": round(
-                transaction_status.currentTransactionEnergy / 1000, 2
-            ),
-            "last_transaction_start_time": old_data.get("last_transaction_start_time"),
-            "last_transaction_end_time": old_data.get("last_transaction_end_time"),
-            "last_transaction_energy": old_data.get("last_transaction_energy"),
+            ATTR_MAX_CURRENT: executor.data.get(ATTR_MAX_CURRENT),
+            ATTR_ATMEL_ERROR: bool(is_error.error),
+            ATTR_NETWORK_STATUS_ETHERNET: network_status.ethernet == "Connected",
+            ATTR_NETWORK_STATUS_WLAN: network_status.wlan == "Connected",
+            ATTR_CHARGER_STATUS: transaction_status.ocppCpState,
+            ATTR_CHARGER_IS_CHARGING: transaction_status.ocppCpState != "Available",
+            ATTR_CHARGER_CURRENT_RATE: transaction_status.currentChargeRate,
+            ATTR_CHARGER_SECONDS_SINCE_START: transaction_status.secondsSinceChargeStart,
+            ATTR_CHARGER_CURRENT_ENERGY: round(transaction_status.currentTransactionEnergy / 1000, 2),
+            ATTR_LAST_TRANSACTION_START_TIME: old_data.get(ATTR_LAST_TRANSACTION_START_TIME),
+            ATTR_LAST_TRANSACTION_END_TIME: old_data.get(ATTR_LAST_TRANSACTION_END_TIME),
+            ATTR_LAST_TRANSACTION_ENERGY: old_data.get(ATTR_LAST_TRANSACTION_ENERGY),
         }
 
         executor.data = result
