@@ -1,0 +1,47 @@
+{
+  "config": {
+    "step": {
+      "init": {
+        "title": "LRT Wallbox Configuration",
+        "description": "Configure your LRT Wallbox charger.",
+        "data": {
+          "choice": "Action"
+        }
+      }
+    },
+    "abort": {
+      "rfid_scan_failed": "RFID scan failed: {error}",
+      "rfid_add_failed": "Adding RFID failed: {error}",
+      "rfid_delete_failed": "Deleting RFID failed: {error}",
+      "rfid_not_found": "RFID tag ID not found",
+      "rfid_empty": "No saved RFID tags"
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "LRT Wallbox Options",
+        "description": "Choose an action to perform.",
+        "data": {
+          "choice": "Action"
+        }
+      }
+    },
+    "abort": {
+      "rfid_scan_failed": "RFID scan failed: {error}",
+      "rfid_add_failed": "Adding RFID failed: {error}",
+      "rfid_delete_failed": "Deleting RFID failed: {error}",
+      "rfid_not_found": "RFID tag ID not found",
+      "rfid_empty": "No saved RFID tags"
+    }
+  },
+  "selector": {
+    "choice": {
+      "options": {
+        "general": "General settings",
+        "rfid": "Add RFID tag",
+        "rfid_delete": "Delete RFID tag"
+      }
+    }
+  }
+}

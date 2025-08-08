@@ -1,0 +1,152 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "LRT Wallbox konfigurieren",
+        "description": "Stellen Sie die Verbindung zu Ihrer LRT Wallbox her.",
+        "data": {
+          "name": "Name",
+          "host": "Host",
+          "username": "Benutzername",
+          "password": "Passwort",
+          "max_load": "Maximalstrom (A)"
+        }
+      }
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "LRT Wallbox-Optionen",
+        "description": "Wählen Sie eine Aktion aus.",
+        "data": {
+          "choice": "Aktion"
+        }
+      },
+      "general": {
+        "title": "Wallbox-Einstellungen aktualisieren",
+        "description": "Verbindungsdetails und Strombegrenzung bearbeiten.",
+        "data": {
+          "name": "Name",
+          "host": "Host",
+          "username": "Benutzername",
+          "password": "Passwort",
+          "max_load": "Maximalstrom (A)"
+        }
+      },
+      "enter_name": {
+        "title": "Name des RFID-Tags",
+        "data": {
+          "name": "Name"
+        }
+      },
+      "rfid_delete": {
+        "title": "RFID-Tag löschen",
+        "description": "Das Löschen eines RFID-Tags entfernt es dauerhaft.",
+        "data": {
+          "tag_id": "Tag-ID"
+        }
+      }
+    },
+    "abort": {
+      "rfid_scan_failed": "RFID-Scan fehlgeschlagen: {error}",
+      "rfid_add_failed": "RFID-Hinzufügen fehlgeschlagen: {error}",
+      "rfid_delete_failed": "RFID-Löschen fehlgeschlagen: {error}",
+      "rfid_not_found": "RFID-Tag-ID nicht gefunden",
+      "rfid_empty": "Keine gespeicherten RFID-Tags gefunden"
+    }
+  },
+  "entity": {
+    "button": {
+      "restart_wallbox": {
+        "name": "Wallbox neu starten"
+      }
+    },
+    "number": {
+      "max_current": {
+        "name": "Strombegrenzung"
+      }
+    },
+    "switch": {
+      "charging": {
+        "name": "Laden"
+      }
+    },
+    "sensor": {
+      "esp_fw": {
+        "name": "ESP-Firmware"
+      },
+      "atmel_fw": {
+        "name": "Atmel-Firmware"
+      },
+      "serial_number": {
+        "name": "Seriennummer"
+      },
+      "charger_status": {
+        "name": "Ladestatus",
+        "state": {
+          "Available": "Verfügbar",
+          "Occupied": "Belegt",
+          "Reserved": "Reserviert",
+          "Unavailable": "Nicht verfügbar",
+          "Faulted": "Fehlerhaft",
+          "Preparing": "Vorbereitung",
+          "Charging": "Laden",
+          "SuspendedEvse": "Unterbrochen (EVSE)",
+          "SuspendedEv": "Unterbrochen (EV)",
+          "Finishing": "Abschluss"
+        }
+      },
+      "charger_current_rate": {
+        "name": "Aktuelle Ladeleistung"
+      },
+      "charger_seconds_since_start": {
+        "name": "Dauer der aktuellen Sitzung"
+      },
+      "transaction_current_energy": {
+        "name": "Energie der aktuellen Sitzung"
+      },
+      "last_transaction_start_time": {
+        "name": "Startzeit der letzten Sitzung"
+      },
+      "last_transaction_end_time": {
+        "name": "Endzeit der letzten Sitzung"
+      },
+      "last_transaction_energy": {
+        "name": "Energie der letzten Sitzung"
+      }
+    },
+    "binary_sensor": {
+      "network_status_wlan": {
+        "name": "Netzwerkstatus (WLAN)"
+      },
+      "network_status_ethernet": {
+        "name": "Netzwerkstatus (Ethernet)"
+      },
+      "setup_status_network": {
+        "name": "Setup-Status (Netzwerk)"
+      },
+      "setup_status_ambient_light": {
+        "name": "Setup-Status (Beleuchtung)"
+      },
+      "setup_status_max_charging_power": {
+        "name": "Setup-Status (Ladeleistung)"
+      },
+      "atmel_error": {
+        "name": "Atmel-Status"
+      },
+      "charging_is_on": {
+        "name": "Ladestatus"
+      }
+    }
+  },
+  "selector": {
+    "choice": {
+      "options": {
+        "general": "Allgemeine Einstellungen",
+        "rfid": "RFID-Tag hinzufügen",
+        "rfid_delete": "RFID-Tag löschen"
+      }
+    }
+  }
+}

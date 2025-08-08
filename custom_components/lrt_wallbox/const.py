@@ -1,0 +1,25 @@
+"""Constants for the LRT Wallbox integration."""
+
+DOMAIN = "lrt_wallbox"
+PLATFORMS = ["sensor", "button", "binary_sensor", "number", "switch"]
+
+CONF_MAX_LOAD = "max_load"
+
+ATTR_ATMEL_ERROR = "atmel_error"
+ATTR_ATMEL_FW = "atmel_fw"
+ATTR_TRANSACTION_CURRENT_ENERGY = "transaction_current_energy"
+ATTR_CHARGER_CURRENT_RATE = "charger_current_rate"
+ATTR_CHARGING_IS_ON = "charging_is_on"
+ATTR_CHARGER_SECONDS_SINCE_START = "charger_seconds_since_start"
+ATTR_CHARGER_STATUS = "charger_status"
+ATTR_ESP_FW = "esp_fw"
+ATTR_LAST_TRANSACTION_ENERGY = "last_transaction_energy"
+ATTR_LAST_TRANSACTION_END_TIME = "last_transaction_end_time"
+ATTR_LAST_TRANSACTION_START_TIME = "last_transaction_start_time"
+ATTR_MAX_CURRENT = "max_current"
+ATTR_NETWORK_STATUS_ETHERNET = "network_status_ethernet"
+ATTR_NETWORK_STATUS_WLAN = "network_status_wlan"
+ATTR_SETUP_STATUS_AMBIENT_LIGHT = "setup_status_ambient_light"
+ATTR_SETUP_STATUS_NETWORK = "setup_status_network"
+ATTR_SETUP_STATUS_MAX_CHARGING_POWER = "setup_status_max_charging_power"
+ATTR_RESTART_WALLBOX = "restart_wallbox"

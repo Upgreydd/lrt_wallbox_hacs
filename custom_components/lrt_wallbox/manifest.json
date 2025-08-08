@@ -1,0 +1,18 @@
+{
+  "domain": "lrt_wallbox",
+  "name": "LRT Wallbox",
+  "codeowners": [
+    "@Upgreydd"
+  ],
+  "config_flow": true,
+  "documentation": "https://github.com/Upgreydd/lrt_wallbox_hacs",
+  "integration_type": "device",
+  "iot_class": "cloud_polling",
+  "issue_tracker": "https://github.com/Upgreydd/lrt_wallbox_hacs/issues",
+  "quality_scale": "bronze",
+  "requirements": [
+    "lrt_wallbox==0.1.6",
+    "aioflo==2021.11.0"
+  ],
+  "version": "0.1.0"
+}

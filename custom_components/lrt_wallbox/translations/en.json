@@ -1,0 +1,152 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Configure LRT Wallbox",
+        "description": "Set up the connection to your LRT Wallbox charger.",
+        "data": {
+          "name": "Name",
+          "host": "Host",
+          "username": "Username",
+          "password": "Password",
+          "max_load": "Maximum current (A)"
+        }
+      }
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "LRT Wallbox Options",
+        "description": "Choose an action to perform.",
+        "data": {
+          "choice": "Action"
+        }
+      },
+      "general": {
+        "title": "Update Wallbox Settings",
+        "description": "Edit connection details and current limit.",
+        "data": {
+          "name": "Name",
+          "host": "Host",
+          "username": "Username",
+          "password": "Password",
+          "max_load": "Maximum current (A)"
+        }
+      },
+      "enter_name": {
+        "title": "RFID Tag Name",
+        "data": {
+          "name": "Name"
+        }
+      },
+      "rfid_delete": {
+        "title": "Delete RFID Tag",
+        "description": "Deleting an RFID tag will permanently remove it.",
+        "data": {
+          "tag_id": "Tag ID"
+        }
+      }
+    },
+    "abort": {
+      "rfid_scan_failed": "RFID scan failed: {error}",
+      "rfid_add_failed": "Adding RFID failed: {error}",
+      "rfid_delete_failed": "Deleting RFID failed: {error}",
+      "rfid_not_found": "RFID tag ID not found",
+      "rfid_empty": "No RFID tags found"
+    }
+  },
+  "entity": {
+    "button": {
+      "restart_wallbox": {
+        "name": "Restart Wallbox"
+      }
+    },
+    "number": {
+      "max_current": {
+        "name": "Current limit"
+      }
+    },
+    "switch": {
+      "charging": {
+        "name": "Charging"
+      }
+    },
+    "sensor": {
+      "esp_fw": {
+        "name": "ESP Firmware"
+      },
+      "atmel_fw": {
+        "name": "Atmel Firmware"
+      },
+      "serial_number": {
+        "name": "Serial number"
+      },
+      "charger_status": {
+        "name": "Charger status",
+        "state": {
+          "Available": "Available",
+          "Occupied": "Occupied",
+          "Reserved": "Reserved",
+          "Unavailable": "Unavailable",
+          "Faulted": "Faulted",
+          "Preparing": "Preparing",
+          "Charging": "Charging",
+          "SuspendedEvse": "Suspended (EVSE)",
+          "SuspendedEv": "Suspended (EV)",
+          "Finishing": "Finishing"
+        }
+      },
+      "charger_current_rate": {
+        "name": "Current charging power"
+      },
+      "charger_seconds_since_start": {
+        "name": "Current session duration"
+      },
+      "transaction_current_energy": {
+        "name": "Current session energy"
+      },
+      "last_transaction_start_time": {
+        "name": "Last session start time"
+      },
+      "last_transaction_end_time": {
+        "name": "Last session end time"
+      },
+      "last_transaction_energy": {
+        "name": "Last session energy"
+      }
+    },
+    "binary_sensor": {
+      "network_status_wlan": {
+        "name": "Network status (Wi-Fi)"
+      },
+      "network_status_ethernet": {
+        "name": "Network status (Ethernet)"
+      },
+      "setup_status_network": {
+        "name": "Setup status (Network)"
+      },
+      "setup_status_ambient_light": {
+        "name": "Setup status (Lighting)"
+      },
+      "setup_status_max_charging_power": {
+        "name": "Setup status (Charging power)"
+      },
+      "atmel_error": {
+        "name": "Atmel status"
+      },
+      "charging_is_on": {
+        "name": "Charging status"
+      }
+    }
+  },
+  "selector": {
+    "choice": {
+      "options": {
+        "general": "General settings",
+        "rfid": "Add RFID tag",
+        "rfid_delete": "Delete RFID tag"
+      }
+    }
+  }
+}

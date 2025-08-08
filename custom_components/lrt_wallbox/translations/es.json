@@ -1,0 +1,152 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Configurar LRT Wallbox",
+        "description": "Configura la conexión con tu cargador LRT Wallbox.",
+        "data": {
+          "name": "Nombre",
+          "host": "Host",
+          "username": "Usuario",
+          "password": "Contraseña",
+          "max_load": "Corriente máxima (A)"
+        }
+      }
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Opciones de LRT Wallbox",
+        "description": "Elige una acción para realizar.",
+        "data": {
+          "choice": "Acción"
+        }
+      },
+      "general": {
+        "title": "Actualizar configuración de Wallbox",
+        "description": "Edita los detalles de conexión y el límite de corriente.",
+        "data": {
+          "name": "Nombre",
+          "host": "Host",
+          "username": "Usuario",
+          "password": "Contraseña",
+          "max_load": "Corriente máxima (A)"
+        }
+      },
+      "enter_name": {
+        "title": "Nombre de la etiqueta RFID",
+        "data": {
+          "name": "Nombre"
+        }
+      },
+      "rfid_delete": {
+        "title": "Eliminar etiqueta RFID",
+        "description": "Eliminar una etiqueta RFID la eliminará de forma permanente.",
+        "data": {
+          "tag_id": "ID de etiqueta"
+        }
+      }
+    },
+    "abort": {
+      "rfid_scan_failed": "Error al escanear RFID: {error}",
+      "rfid_add_failed": "Error al añadir RFID: {error}",
+      "rfid_delete_failed": "Error al eliminar RFID: {error}",
+      "rfid_not_found": "ID de etiqueta RFID no encontrada",
+      "rfid_empty": "No hay etiquetas RFID guardadas"
+    }
+  },
+  "entity": {
+    "button": {
+      "restart_wallbox": {
+        "name": "Reiniciar Wallbox"
+      }
+    },
+    "number": {
+      "max_current": {
+        "name": "Límite de corriente"
+      }
+    },
+    "switch": {
+      "charging": {
+        "name": "Cargando"
+      }
+    },
+    "sensor": {
+      "esp_fw": {
+        "name": "Firmware ESP"
+      },
+      "atmel_fw": {
+        "name": "Firmware Atmel"
+      },
+      "serial_number": {
+        "name": "Número de serie"
+      },
+      "charger_status": {
+        "name": "Estado del cargador",
+        "state": {
+          "Available": "Disponible",
+          "Occupied": "Ocupado",
+          "Reserved": "Reservado",
+          "Unavailable": "No disponible",
+          "Faulted": "Con fallo",
+          "Preparing": "Preparando",
+          "Charging": "Cargando",
+          "SuspendedEvse": "Suspendido (EVSE)",
+          "SuspendedEv": "Suspendido (EV)",
+          "Finishing": "Finalizando"
+        }
+      },
+      "charger_current_rate": {
+        "name": "Potencia de carga actual"
+      },
+      "charger_seconds_since_start": {
+        "name": "Duración de la sesión actual"
+      },
+      "transaction_current_energy": {
+        "name": "Energía de la sesión actual"
+      },
+      "last_transaction_start_time": {
+        "name": "Hora de inicio de la última sesión"
+      },
+      "last_transaction_end_time": {
+        "name": "Hora de finalización de la última sesión"
+      },
+      "last_transaction_energy": {
+        "name": "Energía de la última sesión"
+      }
+    },
+    "binary_sensor": {
+      "network_status_wlan": {
+        "name": "Estado de la red (Wi-Fi)"
+      },
+      "network_status_ethernet": {
+        "name": "Estado de la red (Ethernet)"
+      },
+      "setup_status_network": {
+        "name": "Estado de configuración (Red)"
+      },
+      "setup_status_ambient_light": {
+        "name": "Estado de configuración (Iluminación)"
+      },
+      "setup_status_max_charging_power": {
+        "name": "Estado de configuración (Potencia de carga)"
+      },
+      "atmel_error": {
+        "name": "Estado de Atmel"
+      },
+      "charging_is_on": {
+        "name": "Estado de carga"
+      }
+    }
+  },
+  "selector": {
+    "choice": {
+      "options": {
+        "general": "Configuración general",
+        "rfid": "Añadir etiqueta RFID",
+        "rfid_delete": "Eliminar etiqueta RFID"
+      }
+    }
+  }
+}

@@ -1,0 +1,152 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Configurer LRT Wallbox",
+        "description": "Configurez la connexion à votre borne de recharge LRT Wallbox.",
+        "data": {
+          "name": "Nom",
+          "host": "Hôte",
+          "username": "Nom d’utilisateur",
+          "password": "Mot de passe",
+          "max_load": "Courant maximal (A)"
+        }
+      }
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Options LRT Wallbox",
+        "description": "Choisissez une action à effectuer.",
+        "data": {
+          "choice": "Action"
+        }
+      },
+      "general": {
+        "title": "Mettre à jour les paramètres de la Wallbox",
+        "description": "Modifiez les détails de connexion et la limite de courant.",
+        "data": {
+          "name": "Nom",
+          "host": "Hôte",
+          "username": "Nom d’utilisateur",
+          "password": "Mot de passe",
+          "max_load": "Courant maximal (A)"
+        }
+      },
+      "enter_name": {
+        "title": "Nom du tag RFID",
+        "data": {
+          "name": "Nom"
+        }
+      },
+      "rfid_delete": {
+        "title": "Supprimer le tag RFID",
+        "description": "La suppression d’un tag RFID l’enlèvera définitivement.",
+        "data": {
+          "tag_id": "ID du tag"
+        }
+      }
+    },
+    "abort": {
+      "rfid_scan_failed": "Échec de la lecture RFID : {error}",
+      "rfid_add_failed": "Échec de l’ajout du RFID : {error}",
+      "rfid_delete_failed": "Échec de la suppression du RFID : {error}",
+      "rfid_not_found": "ID du tag RFID introuvable",
+      "rfid_empty": "Aucun tag RFID enregistré"
+    }
+  },
+  "entity": {
+    "button": {
+      "restart_wallbox": {
+        "name": "Redémarrer la Wallbox"
+      }
+    },
+    "number": {
+      "max_current": {
+        "name": "Limite de courant"
+      }
+    },
+    "switch": {
+      "charging": {
+        "name": "En charge"
+      }
+    },
+    "sensor": {
+      "esp_fw": {
+        "name": "Micrologiciel ESP"
+      },
+      "atmel_fw": {
+        "name": "Micrologiciel Atmel"
+      },
+      "serial_number": {
+        "name": "Numéro de série"
+      },
+      "charger_status": {
+        "name": "Statut du chargeur",
+        "state": {
+          "Available": "Disponible",
+          "Occupied": "Occupé",
+          "Reserved": "Réservé",
+          "Unavailable": "Indisponible",
+          "Faulted": "Défectueux",
+          "Preparing": "Préparation",
+          "Charging": "En charge",
+          "SuspendedEvse": "Suspendu (EVSE)",
+          "SuspendedEv": "Suspendu (EV)",
+          "Finishing": "Finalisation"
+        }
+      },
+      "charger_current_rate": {
+        "name": "Puissance de charge actuelle"
+      },
+      "charger_seconds_since_start": {
+        "name": "Durée de la session en cours"
+      },
+      "transaction_current_energy": {
+        "name": "Énergie de la session en cours"
+      },
+      "last_transaction_start_time": {
+        "name": "Heure de début de la dernière session"
+      },
+      "last_transaction_end_time": {
+        "name": "Heure de fin de la dernière session"
+      },
+      "last_transaction_energy": {
+        "name": "Énergie de la dernière session"
+      }
+    },
+    "binary_sensor": {
+      "network_status_wlan": {
+        "name": "Statut du réseau (Wi-Fi)"
+      },
+      "network_status_ethernet": {
+        "name": "Statut du réseau (Ethernet)"
+      },
+      "setup_status_network": {
+        "name": "Statut de configuration (Réseau)"
+      },
+      "setup_status_ambient_light": {
+        "name": "Statut de configuration (Éclairage)"
+      },
+      "setup_status_max_charging_power": {
+        "name": "Statut de configuration (Puissance de charge)"
+      },
+      "atmel_error": {
+        "name": "Statut Atmel"
+      },
+      "charging_is_on": {
+        "name": "Statut de la charge"
+      }
+    }
+  },
+  "selector": {
+    "choice": {
+      "options": {
+        "general": "Paramètres généraux",
+        "rfid": "Ajouter un tag RFID",
+        "rfid_delete": "Supprimer un tag RFID"
+      }
+    }
+  }
+}
