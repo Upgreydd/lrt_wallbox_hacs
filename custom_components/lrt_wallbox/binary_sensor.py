@@ -42,17 +42,17 @@ SENSOR_DEFINITIONS: dict[str, dict[str, Any]] = {
     ATTR_SETUP_STATUS_NETWORK: {
         "translation_key": ATTR_SETUP_STATUS_NETWORK,
         "icon": "mdi:network-outline",
-        "device_class": BinarySensorDeviceClass.PROBLEM,
+        "device_class": BinarySensorDeviceClass.POWER,
     },
     ATTR_SETUP_STATUS_AMBIENT_LIGHT: {
         "translation_key": ATTR_SETUP_STATUS_AMBIENT_LIGHT,
         "icon": "mdi:brightness-6",
-        "device_class": BinarySensorDeviceClass.PROBLEM,
+        "device_class": BinarySensorDeviceClass.POWER,
     },
     ATTR_SETUP_STATUS_MAX_CHARGING_POWER: {
         "translation_key": ATTR_SETUP_STATUS_MAX_CHARGING_POWER,
         "icon": "mdi:flash",
-        "device_class": BinarySensorDeviceClass.PROBLEM,
+        "device_class": BinarySensorDeviceClass.POWER,
     },
     ATTR_ATMEL_ERROR: {
         "translation_key": ATTR_ATMEL_ERROR,
@@ -62,7 +62,7 @@ SENSOR_DEFINITIONS: dict[str, dict[str, Any]] = {
     ATTR_CHARGING_IS_ON: {
         "translation_key": ATTR_CHARGING_IS_ON,
         "icon": "mdi:ev-station",
-        "device_class": BinarySensorDeviceClass.RUNNING,
+        "device_class": BinarySensorDeviceClass.BATTERY_CHARGING,
     }
 }
 

@@ -5,7 +5,6 @@ import itertools
 import logging
 from asyncio import PriorityQueue
 from collections.abc import Callable
-from datetime import datetime
 from typing import Any
 
 from homeassistant.config_entries import ConfigEntry
@@ -13,13 +12,13 @@ from homeassistant.const import ATTR_SERIAL_NUMBER
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.storage import Store
 from lrt_wallbox import WallboxError
+from lrt_wallbox.msg_types import TransactionStopResponse
 from requests.exceptions import ConnectionError, ReadTimeout
 
 from .const import DOMAIN, ATTR_MAX_CURRENT, ATTR_ESP_FW, ATTR_SETUP_STATUS_NETWORK, ATTR_ATMEL_ERROR, \
     ATTR_NETWORK_STATUS_ETHERNET, ATTR_NETWORK_STATUS_WLAN, ATTR_CHARGER_STATUS, ATTR_CHARGING_IS_ON, \
     ATTR_CHARGER_CURRENT_RATE, ATTR_CHARGER_SECONDS_SINCE_START, ATTR_TRANSACTION_CURRENT_ENERGY, \
-    ATTR_LAST_TRANSACTION_START_TIME, ATTR_LAST_TRANSACTION_END_TIME, ATTR_LAST_TRANSACTION_ENERGY, ATTR_ATMEL_FW, \
-    ATTR_SETUP_STATUS_AMBIENT_LIGHT, ATTR_SETUP_STATUS_MAX_CHARGING_POWER
+    ATTR_ATMEL_FW, ATTR_LAST_5_TRANSACTIONS, ATTR_SETUP_STATUS_AMBIENT_LIGHT, ATTR_SETUP_STATUS_MAX_CHARGING_POWER
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -48,41 +47,6 @@ class WallboxClientExecutor:
         ] = PriorityQueue()
         self._task: asyncio.Task | None = None
         self.start()
-
-    async def save_persistent_data(self):
-        """Save persistent data to storage."""
-
-        def dt_iso(val):
-            return val.isoformat() if isinstance(val, datetime) else val
-
-        await self._store.async_save(
-            {
-                ATTR_LAST_TRANSACTION_START_TIME: dt_iso(
-                    self.data.get(ATTR_LAST_TRANSACTION_START_TIME)
-                ),
-                ATTR_LAST_TRANSACTION_END_TIME: dt_iso(
-                    self.data.get(ATTR_LAST_TRANSACTION_END_TIME)
-                ),
-                ATTR_LAST_TRANSACTION_ENERGY: self.data.get(ATTR_LAST_TRANSACTION_ENERGY),
-            }
-        )
-
-    async def load_persistent_data(self):
-        """Load persistent data from storage."""
-        stored = await self._store.async_load()
-        if stored:
-            try:
-                if ATTR_LAST_TRANSACTION_START_TIME in stored:
-                    stored[ATTR_LAST_TRANSACTION_START_TIME] = datetime.fromisoformat(
-                        stored[ATTR_LAST_TRANSACTION_START_TIME]
-                    )
-                if ATTR_LAST_TRANSACTION_END_TIME in stored:
-                    stored[ATTR_LAST_TRANSACTION_END_TIME] = datetime.fromisoformat(
-                        stored[ATTR_LAST_TRANSACTION_END_TIME]
-                    )
-            except Exception as e:  # noqa: BLE001
-                _LOGGER.warning("Failed to parse stored timestamps: %s", e)
-            self.data.update(stored)
 
     def start(self) -> None:
         """Start the background task processing the queue."""
@@ -163,24 +127,47 @@ class WallboxClientExecutor:
             self._task = None
 
 
+def get_last_5_transactions(transaction_log: list[TransactionStopResponse]) -> list[dict[str, int | Any]]:
+    """Get the last 5 transactions from the transaction log."""
+
+    def _norm_ts(ts):
+        """Normalize timestamp to ISO format with UTC timezone."""
+        return ts.replace(" UTC", "Z")
+
+    def _sort_key(t: TransactionStopResponse) -> str:
+        """Sort key for transactions based on end time."""
+        return _norm_ts(t.endTime)
+
+    tx_sorted = sorted(transaction_log, key=_sort_key, reverse=True)
+    last5_objs = tx_sorted[:5]
+
+    return [{
+        "startTime": _norm_ts(t.startTime),
+        "endTime": _norm_ts(t.endTime),
+        "energy": int(t.energy),
+    } for t in last5_objs]
+
+
 async def update_status(executor: WallboxClientExecutor) -> dict[str, Any]:
     """Fetch status from the Wallbox and update shared executor state."""
     try:
+        load_get = await executor.call("config_load_get", priority=10)
+        transaction_status = await executor.call("transaction_get", priority=10)
+
         is_error = await executor.call("atmel_error_get", priority=10)
         network_status = await executor.call("config_network_status", priority=10)
-        transaction_status = await executor.call("transaction_get", priority=10)
-        load_get = await executor.call("config_load_get", priority=10)
 
-        old_data = executor.data
-        result = {
+        transaction_log = await executor.call("transaction_log_get", priority=10)
+        last_5 = get_last_5_transactions(transaction_log)
+
+        result = dict(executor.data)
+        result.update({
             ATTR_SERIAL_NUMBER: executor.data.get(ATTR_SERIAL_NUMBER),
             ATTR_ESP_FW: executor.data.get(ATTR_ESP_FW),
             ATTR_ATMEL_FW: executor.data.get(ATTR_ATMEL_FW),
-            ATTR_SETUP_STATUS_NETWORK: executor.data.get(ATTR_SETUP_STATUS_NETWORK),
-            ATTR_SETUP_STATUS_AMBIENT_LIGHT: executor.data.get(ATTR_SETUP_STATUS_AMBIENT_LIGHT),
-            ATTR_SETUP_STATUS_MAX_CHARGING_POWER: executor.data.get(
-                ATTR_SETUP_STATUS_MAX_CHARGING_POWER
-            ),
+            ATTR_SETUP_STATUS_NETWORK: not executor.data.get(ATTR_SETUP_STATUS_NETWORK),
+            ATTR_SETUP_STATUS_AMBIENT_LIGHT: not executor.data.get(ATTR_SETUP_STATUS_AMBIENT_LIGHT),
+            ATTR_SETUP_STATUS_MAX_CHARGING_POWER: not executor.data.get(ATTR_SETUP_STATUS_MAX_CHARGING_POWER),
             ATTR_MAX_CURRENT: load_get.maxCurrent,
             ATTR_ATMEL_ERROR: bool(is_error.error),
             ATTR_NETWORK_STATUS_ETHERNET: network_status.ethernet == "Connected",
@@ -190,10 +177,8 @@ async def update_status(executor: WallboxClientExecutor) -> dict[str, Any]:
             ATTR_CHARGER_CURRENT_RATE: transaction_status.currentChargeRate,
             ATTR_CHARGER_SECONDS_SINCE_START: transaction_status.secondsSinceChargeStart,
             ATTR_TRANSACTION_CURRENT_ENERGY: transaction_status.currentTransactionEnergy,
-            ATTR_LAST_TRANSACTION_START_TIME: old_data.get(ATTR_LAST_TRANSACTION_START_TIME),
-            ATTR_LAST_TRANSACTION_END_TIME: old_data.get(ATTR_LAST_TRANSACTION_END_TIME),
-            ATTR_LAST_TRANSACTION_ENERGY: old_data.get(ATTR_LAST_TRANSACTION_ENERGY),
-        }
+            ATTR_LAST_5_TRANSACTIONS: last_5,
+        })
 
         executor.data = result
         executor.last_update_success = True

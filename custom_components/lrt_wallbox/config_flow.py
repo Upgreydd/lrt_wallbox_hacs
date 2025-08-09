@@ -15,7 +15,7 @@ from homeassistant.helpers.selector import (
 )
 from lrt_wallbox import WallboxError
 
-from .const import CONF_MAX_LOAD, DOMAIN
+from .const import CONF_MAX_LOAD, DOMAIN, CONF_REFRESH_INTERVAL, CONF_OCPP_WSS_URL
 from .helpers import WallboxClientExecutor, tag_id_to_hex
 
 
@@ -45,6 +45,12 @@ def general_data_schema(current: dict[str, Any] | None = None) -> vol.Schema:
             vol.Required(CONF_MAX_LOAD, default=current.get(CONF_MAX_LOAD, 16)): vol.All(
                 cv.positive_int, vol.Range(min=6, max=32)
             ),
+            vol.Required(CONF_REFRESH_INTERVAL, default=current.get(CONF_REFRESH_INTERVAL, 5)): vol.All(
+                cv.positive_int, vol.Range(min=3, max=300)
+            ),
+            vol.Optional(CONF_OCPP_WSS_URL, default=current.get(CONF_OCPP_WSS_URL, "")): vol.All(
+                cv.string, vol.Length(min=0, max=50)
+            )
         }
     )
 
@@ -68,6 +74,8 @@ class LrtWallboxConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     CONF_USERNAME: user_input[CONF_USERNAME],
                     CONF_PASSWORD: user_input[CONF_PASSWORD],
                     CONF_MAX_LOAD: user_input[CONF_MAX_LOAD],
+                    CONF_REFRESH_INTERVAL: user_input[CONF_REFRESH_INTERVAL],
+                    CONF_OCPP_WSS_URL: user_input[CONF_OCPP_WSS_URL],
                 },
                 options={},
             )
@@ -141,6 +149,8 @@ class LrtWallboxOptionsFlow(config_entries.OptionsFlow):
                     CONF_USERNAME: user_input[CONF_USERNAME],
                     CONF_PASSWORD: user_input[CONF_PASSWORD],
                     CONF_MAX_LOAD: user_input[CONF_MAX_LOAD],
+                    CONF_REFRESH_INTERVAL: user_input[CONF_REFRESH_INTERVAL],
+                    CONF_OCPP_WSS_URL: user_input[CONF_OCPP_WSS_URL]
                 },
             )
             await self.hass.config_entries.async_reload(self.config_entry.entry_id)

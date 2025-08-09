@@ -15,7 +15,8 @@ from lrt_wallbox import WallboxClient
 
 from .config_flow import LrtWallboxOptionsFlow  # noqa: F401
 from .const import DOMAIN, PLATFORMS, CONF_MAX_LOAD, ATTR_MAX_CURRENT, ATTR_ESP_FW, ATTR_ATMEL_FW, \
-    ATTR_SETUP_STATUS_NETWORK, ATTR_SETUP_STATUS_AMBIENT_LIGHT, ATTR_SETUP_STATUS_MAX_CHARGING_POWER
+    ATTR_SETUP_STATUS_NETWORK, ATTR_SETUP_STATUS_AMBIENT_LIGHT, ATTR_SETUP_STATUS_MAX_CHARGING_POWER, \
+    CONF_REFRESH_INTERVAL, CONF_OCPP_WSS_URL
 from .helpers import WallboxClientExecutor, update_status
 
 _LOGGER = logging.getLogger(__name__)
@@ -39,6 +40,12 @@ CONFIG_SCHEMA = vol.Schema(
                 vol.Required(CONF_MAX_LOAD, default=16): vol.All(
                     cv.positive_int, vol.Range(min=6, max=32)
                 ),
+                vol.Required(CONF_REFRESH_INTERVAL, default=5): vol.All(
+                    cv.positive_int, vol.Range(min=3, max=300)
+                ),
+                vol.Optional(CONF_OCPP_WSS_URL, default=""): vol.All(
+                    cv.string, vol.Length(min=0, max=50)
+                )
             }
         )
     },
@@ -58,7 +65,8 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> b
         password=data[CONF_PASSWORD],
     )
     executor = WallboxClientExecutor(client, hass, config_entry)
-    await executor.load_persistent_data()
+
+    await executor.call("config_ocpp_set", data[CONF_OCPP_WSS_URL])
 
     # One time initialization to fetch initial data
     serial = await executor.call("info_serial_get")
@@ -83,7 +91,7 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> b
         logger=_LOGGER,
         config_entry=config_entry,
         name="LRT Wallbox Status",
-        update_interval=timedelta(seconds=5),
+        update_interval=timedelta(seconds=data.get(CONF_REFRESH_INTERVAL, 5)),
         update_method=partial(update_status, executor),
     )
 
@@ -128,6 +136,8 @@ async def async_setup(hass: HomeAssistant, config: dict) -> bool:
             CONF_USERNAME: yaml_config[CONF_USERNAME],
             CONF_PASSWORD: yaml_config[CONF_PASSWORD],
             CONF_MAX_LOAD: yaml_config[CONF_MAX_LOAD],
+            CONF_REFRESH_INTERVAL: yaml_config[CONF_REFRESH_INTERVAL],
+            CONF_OCPP_WSS_URL: yaml_config[CONF_OCPP_WSS_URL],
         })
         await hass.config_entries.async_reload(entry.entry_id)
         _LOGGER.info("Updated existing %s config entry from YAML", DOMAIN)
@@ -140,6 +150,8 @@ async def async_setup(hass: HomeAssistant, config: dict) -> bool:
             CONF_USERNAME: yaml_config[CONF_USERNAME],
             CONF_PASSWORD: yaml_config[CONF_PASSWORD],
             CONF_MAX_LOAD: yaml_config[CONF_MAX_LOAD],
+            CONF_REFRESH_INTERVAL: yaml_config[CONF_REFRESH_INTERVAL],
+            CONF_OCPP_WSS_URL: yaml_config[CONF_OCPP_WSS_URL],
         })
     _LOGGER.info("Imported %s configuration from YAML", DOMAIN)
     return True

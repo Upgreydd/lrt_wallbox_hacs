@@ -9,7 +9,9 @@
           "host": "Host",
           "username": "Benutzername",
           "password": "Passwort",
-          "max_load": "Maximalstrom (A)"
+          "max_load": "Maximalstrom (A)",
+          "refresh_interval": "Aktualisierungsintervall",
+          "ocpp_wss_url": "OCPP WSS URL"
         }
       }
     }
@@ -31,7 +33,9 @@
           "host": "Host",
           "username": "Benutzername",
           "password": "Passwort",
-          "max_load": "Maximalstrom (A)"
+          "max_load": "Maximalstrom (A)",
+          "refresh_interval": "Aktualisierungsintervall",
+          "ocpp_wss_url": "OCPP WSS URL"
         }
       },
       "enter_name": {
@@ -94,7 +98,7 @@
           "Charging": "Laden",
           "SuspendedEvse": "Unterbrochen (EVSE)",
           "SuspendedEv": "Unterbrochen (EV)",
-          "Finishing": "Abschluss"
+          "Finishing": "Abschluss",
         }
       },
       "charger_current_rate": {
@@ -106,14 +110,22 @@
       "transaction_current_energy": {
         "name": "Energie der aktuellen Sitzung"
       },
-      "last_transaction_start_time": {
-        "name": "Startzeit der letzten Sitzung"
-      },
-      "last_transaction_end_time": {
-        "name": "Endzeit der letzten Sitzung"
-      },
-      "last_transaction_energy": {
-        "name": "Energie der letzten Sitzung"
+      "last_5_transactions": {
+        "name": "Letzte Sitzung",
+        "state_attributes": {
+          "start_time": {
+            "name": "Startzeit der letzten Sitzung"
+          },
+          "end_time": {
+            "name": "Endzeit der letzten Sitzung"
+          },
+          "energy": {
+            "name": "Energie der letzten Sitzung"
+          },
+          "history": {
+            "name": "Verlauf der letzten 5 Sitzungen"
+          }
+        }
       }
     },
     "binary_sensor": {
@@ -121,13 +133,25 @@
         "name": "Netzwerkstatus (WLAN)"
       },
       "network_status_ethernet": {
-        "name": "Netzwerkstatus (Ethernet)"
+        "name": "Netzwerkstatus (Ethernet)",
+        "state": {
+          "on": "Ja",
+          "off": "Nein"
+        }
       },
       "setup_status_network": {
-        "name": "Einrichtungsstatus (Netzwerk)"
+        "name": "Einrichtungsstatus (Netzwerk)",
+        "state": {
+          "on": "Ja",
+          "off": "Nein"
+        }
       },
       "setup_status_ambient_light": {
-        "name": "Einrichtungsstatus (Beleuchtung)"
+        "name": "Einrichtungsstatus (Beleuchtung)",
+        "state": {
+          "on": "Ja",
+          "off": "Nein"
+        }
       },
       "setup_status_max_charging_power": {
         "name": "Einrichtungsstatus (Ladeleistung)"

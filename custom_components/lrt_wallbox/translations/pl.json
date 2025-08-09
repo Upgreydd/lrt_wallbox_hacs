@@ -9,7 +9,9 @@
           "host": "Host",
           "username": "Użytkownik",
           "password": "Hasło",
-          "max_load": "Maksymalny prąd (A)"
+          "max_load": "Maksymalny prąd (A)",
+          "refresh_interval": "Interwał odświeżania (s)",
+          "ocpp_wss_url": "Adres URL OCPP WebSocket"
         }
       }
     }
@@ -31,7 +33,9 @@
           "host": "Host",
           "username": "Użytkownik",
           "password": "Hasło",
-          "max_load": "Maksymalny prąd (A)"
+          "max_load": "Maksymalny prąd (A)",
+          "refresh_interval": "Interwał odświeżania (s)",
+          "ocpp_wss_url": "Adres URL OCPP WebSocket"
         }
       },
       "enter_name": {
@@ -106,14 +110,22 @@
       "transaction_current_energy": {
         "name": "Energia bieżącej sesji"
       },
-      "last_transaction_start_time": {
-        "name": "Czas rozpoczęcia ostatniej sesji"
-      },
-      "last_transaction_end_time": {
-        "name": "Czas zakończenia ostatniej sesji"
-      },
-      "last_transaction_energy": {
-        "name": "Energia ostatniej sesji"
+      "last_5_transactions": {
+        "name": "Ostatnia sesja",
+        "state_attributes": {
+          "start_time": {
+            "name": "Czas rozpoczęcia ostatniej sesji"
+          },
+          "end_time": {
+            "name": "Czas zakończenia ostatniej sesji"
+          },
+          "energy": {
+            "name": "Energia ostatniej sesji"
+          },
+          "history": {
+            "name": "Historia ostatnich 5 sesji"
+          }
+        }
       }
     },
     "binary_sensor": {
@@ -124,13 +136,25 @@
         "name": "Status sieci (Ethernet)"
       },
       "setup_status_network": {
-        "name": "Status konfiguracji (Sieć)"
+        "name": "Status konfiguracji (Sieć)",
+        "state": {
+          "on": "Tak",
+          "off": "Nie"
+        }
       },
       "setup_status_ambient_light": {
-        "name": "Status konfiguracji (Oświetlenie)"
+        "name": "Status konfiguracji (Oświetlenie)",
+        "state": {
+          "on": "Tak",
+          "off": "Nie"
+        }
       },
       "setup_status_max_charging_power": {
-        "name": "Status konfiguracji (Moc ładowania)"
+        "name": "Status konfiguracji (Moc ładowania)",
+        "state": {
+          "on": "Tak",
+          "off": "Nie"
+        }
       },
       "atmel_error": {
         "name": "Status Atmel"
