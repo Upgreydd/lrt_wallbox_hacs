@@ -58,7 +58,6 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> b
         password=data[CONF_PASSWORD],
     )
     executor = WallboxClientExecutor(client, hass, config_entry)
-    await executor.load_persistent_data()
 
     # One time initialization to fetch initial data
     serial = await executor.call("info_serial_get")

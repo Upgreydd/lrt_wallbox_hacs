@@ -14,5 +14,5 @@
     "lrt_wallbox==0.1.7",
     "aioflo==2021.11.0"
   ],
-  "version": "0.1.2"
+  "version": "0.1.3"
 }

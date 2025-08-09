@@ -106,14 +106,14 @@
       "transaction_current_energy": {
         "name": "Current session energy"
       },
-      "last_transaction_start_time": {
-        "name": "Last session start time"
-      },
-      "last_transaction_end_time": {
-        "name": "Last session end time"
-      },
-      "last_transaction_energy": {
-        "name": "Last session energy"
+      "last_5_transactions": {
+        "name": "Last session",
+        "state_attributes": {
+          "start_time": "Start time of last session",
+          "end_time": "End time of last session",
+          "energy": "Energy",
+          "history": "History of last 5 sessions"
+        }
       }
     },
     "binary_sensor": {

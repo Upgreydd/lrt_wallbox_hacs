@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import logging
-from datetime import UTC, datetime
 
 from homeassistant.components.switch import SwitchEntity
 from homeassistant.config_entries import ConfigEntry
@@ -18,9 +17,6 @@ from lrt_wallbox import WallboxError
 from .const import (
     DOMAIN,
     ATTR_CHARGING_IS_ON,
-    ATTR_LAST_TRANSACTION_START_TIME,
-    ATTR_LAST_TRANSACTION_END_TIME,
-    ATTR_LAST_TRANSACTION_ENERGY,
     ATTR_CHARGING
 )
 from .entity import WallboxBaseEntity
@@ -68,21 +64,10 @@ class WallboxChargeSwitch(CoordinatorEntity, WallboxBaseEntity, SwitchEntity):
         _LOGGER.debug("Stopping charging")
         try:
             transaction = await self.executor.call("transaction_stop", priority=1)
-            start_dt = datetime.strptime(
-                transaction.startTime, "%Y-%m-%d %H:%M:%S %Z"
-            ).replace(tzinfo=UTC)
-            end_dt = datetime.strptime(
-                transaction.endTime, "%Y-%m-%d %H:%M:%S %Z"
-            ).replace(tzinfo=UTC)
-            self.executor.data[ATTR_LAST_TRANSACTION_START_TIME] = start_dt
-            self.executor.data[ATTR_LAST_TRANSACTION_END_TIME] = end_dt
-            self.executor.data[ATTR_LAST_TRANSACTION_ENERGY] = transaction.energy
-
         except WallboxError as e:
             if e.kind == "NotFound":
                 _LOGGER.warning("No active transaction found to stop")
         self.executor.data[ATTR_CHARGING_IS_ON] = False
-        await self.executor.save_persistent_data()
         await self.coordinator.async_request_refresh()
 
     @property

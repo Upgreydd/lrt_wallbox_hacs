@@ -106,14 +106,14 @@
       "transaction_current_energy": {
         "name": "Energia bieżącej sesji"
       },
-      "last_transaction_start_time": {
-        "name": "Czas rozpoczęcia ostatniej sesji"
-      },
-      "last_transaction_end_time": {
-        "name": "Czas zakończenia ostatniej sesji"
-      },
-      "last_transaction_energy": {
-        "name": "Energia ostatniej sesji"
+      "last_5_transactions": {
+        "name": "Ostatnia sesja",
+        "state_attributes": {
+          "start_time": "Czas rozpoczęcia ostatniej sesji",
+          "end_time": "Czas zakończenia ostatniej sesji",
+          "energy": "Energia",
+          "history": "Historia ostatnich 5 sesji"
+        }
       }
     },
     "binary_sensor": {

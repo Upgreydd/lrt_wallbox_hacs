@@ -3,9 +3,9 @@
 from __future__ import annotations
 
 import logging
-from typing import Any
+from typing import Any, Mapping
 
-from homeassistant.components.sensor import SensorDeviceClass, SensorEntity
+from homeassistant.components.sensor import SensorDeviceClass, SensorEntity, SensorStateClass
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import EntityCategory, ATTR_SERIAL_NUMBER, UnitOfTime, UnitOfEnergy, UnitOfPower
 from homeassistant.core import HomeAssistant
@@ -23,9 +23,7 @@ from .const import (
     ATTR_CHARGER_CURRENT_RATE,
     ATTR_CHARGER_SECONDS_SINCE_START,
     ATTR_TRANSACTION_CURRENT_ENERGY,
-    ATTR_LAST_TRANSACTION_START_TIME,
-    ATTR_LAST_TRANSACTION_END_TIME,
-    ATTR_LAST_TRANSACTION_ENERGY,
+    ATTR_LAST_5_TRANSACTIONS,
 )
 from .entity import WallboxBaseEntity
 from .helpers import WallboxClientExecutor
@@ -55,6 +53,7 @@ METADATA_SENSOR_DEFINITIONS: dict[str, dict[str, Any]] = {
         "icon": "mdi:flash-outline",
         "device_class": SensorDeviceClass.POWER,
         "unit_of_measurement": UnitOfPower.WATT,
+        "state_class": SensorStateClass.MEASUREMENT,
     },
     ATTR_CHARGER_SECONDS_SINCE_START: {
         "translation_key": ATTR_CHARGER_SECONDS_SINCE_START,
@@ -67,23 +66,15 @@ METADATA_SENSOR_DEFINITIONS: dict[str, dict[str, Any]] = {
         "icon": "mdi:lightning-bolt",
         "device_class": SensorDeviceClass.ENERGY,
         "unit_of_measurement": UnitOfEnergy.WATT_HOUR,
+        "state_class": SensorStateClass.MEASUREMENT,
     },
-    ATTR_LAST_TRANSACTION_START_TIME: {
-        "translation_key": ATTR_LAST_TRANSACTION_START_TIME,
-        "icon": "mdi:clock-start",
-        "device_class": SensorDeviceClass.TIMESTAMP,
-    },
-    ATTR_LAST_TRANSACTION_END_TIME: {
-        "translation_key": ATTR_LAST_TRANSACTION_END_TIME,
-        "icon": "mdi:clock-end",
-        "device_class": SensorDeviceClass.TIMESTAMP,
-    },
-    ATTR_LAST_TRANSACTION_ENERGY: {
-        "translation_key": ATTR_LAST_TRANSACTION_ENERGY,
-        "icon": "mdi:lightning-bolt",
+    ATTR_LAST_5_TRANSACTIONS: {
+        "translation_key": ATTR_LAST_5_TRANSACTIONS,
+        "icon": "mdi:history",
         "device_class": SensorDeviceClass.ENERGY,
         "unit_of_measurement": UnitOfEnergy.WATT_HOUR,
-    },
+        "state_class": SensorStateClass.MEASUREMENT
+    }
 }
 
 
@@ -123,19 +114,38 @@ class WallboxSensor(CoordinatorEntity, WallboxBaseEntity, SensorEntity):
 
         definition = METADATA_SENSOR_DEFINITIONS[key]
         self._attr_icon = definition["icon"]
-        if definition.get("device_class"):
-            self._attr_device_class = definition.get("device_class")
+        self._attr_device_class = definition.get("device_class")
         self._attr_translation_key = definition["translation_key"]
         self._attr_native_unit_of_measurement = definition.get("unit_of_measurement")
+        self._attr_state_class = definition.get("state_class")
         self._attr_unique_id = f"{executor.config_entry.entry_id}_{key}"
-        self._attr_entity_category = definition.get(
-            "entity_category", EntityCategory.DIAGNOSTIC
-        )
+        self._attr_entity_category = definition.get("entity_category", EntityCategory.DIAGNOSTIC)
 
     @property
     def native_value(self) -> Any:
         """Return the value of the sensor."""
+        if self._key == ATTR_LAST_5_TRANSACTIONS:
+            lst = self.executor.data.get(self._key)
+            lst = lst if isinstance(lst, list) else []
+            first = lst[0] if lst else None
+            return first.get('energy') if first else None
         return self.executor.data.get(self._key)
+
+    @property
+    def extra_state_attributes(self) -> Mapping[str, Any] | None:
+        if self._key == ATTR_LAST_5_TRANSACTIONS:
+            lst = self.executor.data.get(ATTR_LAST_5_TRANSACTIONS)
+            lst = lst if isinstance(lst, list) else []
+            if not lst:
+                return None
+            first = lst[0]
+            return {
+                "start_time": first.get("startTime"),
+                "end_time": first.get("endTime"),
+                "energy": first.get("energy"),
+                "history": lst[1:5]
+            }
+        return None
 
     @property
     def available(self) -> bool:
