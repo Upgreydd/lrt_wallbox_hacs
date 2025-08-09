@@ -98,7 +98,7 @@
           "Charging": "Laden",
           "SuspendedEvse": "Unterbrochen (EVSE)",
           "SuspendedEv": "Unterbrochen (EV)",
-          "Finishing": "Abschluss",
+          "Finishing": "Abschluss"
         }
       },
       "charger_current_rate": {
