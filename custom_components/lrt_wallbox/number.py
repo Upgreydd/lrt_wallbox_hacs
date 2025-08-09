@@ -43,7 +43,7 @@ class WallboxLoadLimitNumber(CoordinatorEntity, WallboxBaseEntity, NumberEntity)
 
     _attr_has_entity_name = True
     _attr_translation_key = ATTR_MAX_CURRENT
-    _attr_icon = "mdi:flash"
+    _attr_icon = "mdi:current-ac"
     _attr_native_unit_of_measurement = "A"
     _attr_entity_category = EntityCategory.CONFIG
     _attr_mode = NumberMode.SLIDER

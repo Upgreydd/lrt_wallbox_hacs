@@ -2,8 +2,8 @@
   "config": {
     "step": {
       "user": {
-        "title": "LRT Wallbox konfigurieren",
-        "description": "Stellen Sie die Verbindung zu Ihrer LRT Wallbox her.",
+        "title": "Wallbox konfigurieren",
+        "description": "Stellen Sie die Verbindung zur Wallbox-Ladestation her.",
         "data": {
           "name": "Name",
           "host": "Host",
@@ -17,15 +17,15 @@
   "options": {
     "step": {
       "init": {
-        "title": "LRT Wallbox-Optionen",
+        "title": "Wallbox-Optionen",
         "description": "Wählen Sie eine Aktion aus.",
         "data": {
           "choice": "Aktion"
         }
       },
       "general": {
-        "title": "Wallbox-Einstellungen aktualisieren",
-        "description": "Verbindungsdetails und Strombegrenzung bearbeiten.",
+        "title": "Wallbox-Einstellungen",
+        "description": "Bearbeiten Sie die Verbindungsdetails und die Strombegrenzung.",
         "data": {
           "name": "Name",
           "host": "Host",
@@ -83,7 +83,7 @@
         "name": "Seriennummer"
       },
       "charger_status": {
-        "name": "Ladestatus",
+        "name": "Status der Wallbox",
         "state": {
           "Available": "Verfügbar",
           "Occupied": "Belegt",
@@ -124,13 +124,13 @@
         "name": "Netzwerkstatus (Ethernet)"
       },
       "setup_status_network": {
-        "name": "Setup-Status (Netzwerk)"
+        "name": "Einrichtungsstatus (Netzwerk)"
       },
       "setup_status_ambient_light": {
-        "name": "Setup-Status (Beleuchtung)"
+        "name": "Einrichtungsstatus (Beleuchtung)"
       },
       "setup_status_max_charging_power": {
-        "name": "Setup-Status (Ladeleistung)"
+        "name": "Einrichtungsstatus (Ladeleistung)"
       },
       "atmel_error": {
         "name": "Atmel-Status"

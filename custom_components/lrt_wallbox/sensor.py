@@ -7,8 +7,7 @@ from typing import Any
 
 from homeassistant.components.sensor import SensorDeviceClass, SensorEntity
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import EntityCategory, ATTR_SERIAL_NUMBER, UnitOfTime, UnitOfEnergy, UnitOfElectricCurrent, \
-    UnitOfPower
+from homeassistant.const import EntityCategory, ATTR_SERIAL_NUMBER, UnitOfTime, UnitOfEnergy, UnitOfPower
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import (
@@ -53,7 +52,7 @@ METADATA_SENSOR_DEFINITIONS: dict[str, dict[str, Any]] = {
     },
     ATTR_CHARGER_CURRENT_RATE: {
         "translation_key": ATTR_CHARGER_CURRENT_RATE,
-        "icon": "mdi:flash",
+        "icon": "mdi:flash-outline",
         "device_class": SensorDeviceClass.POWER,
         "unit_of_measurement": UnitOfPower.WATT,
     },
@@ -66,7 +65,7 @@ METADATA_SENSOR_DEFINITIONS: dict[str, dict[str, Any]] = {
     ATTR_TRANSACTION_CURRENT_ENERGY: {
         "translation_key": ATTR_TRANSACTION_CURRENT_ENERGY,
         "icon": "mdi:lightning-bolt",
-        "device_class": SensorDeviceClass.POWER,
+        "device_class": SensorDeviceClass.ENERGY,
         "unit_of_measurement": UnitOfEnergy.WATT_HOUR,
     },
     ATTR_LAST_TRANSACTION_START_TIME: {

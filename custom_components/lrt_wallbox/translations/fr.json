@@ -2,8 +2,8 @@
   "config": {
     "step": {
       "user": {
-        "title": "Configurer LRT Wallbox",
-        "description": "Configurez la connexion à votre borne de recharge LRT Wallbox.",
+        "title": "Configurer la Wallbox",
+        "description": "Configurez la connexion à la borne de recharge Wallbox.",
         "data": {
           "name": "Nom",
           "host": "Hôte",
@@ -17,14 +17,14 @@
   "options": {
     "step": {
       "init": {
-        "title": "Options LRT Wallbox",
+        "title": "Options de la Wallbox",
         "description": "Choisissez une action à effectuer.",
         "data": {
           "choice": "Action"
         }
       },
       "general": {
-        "title": "Mettre à jour les paramètres de la Wallbox",
+        "title": "Paramètres de la Wallbox",
         "description": "Modifiez les détails de connexion et la limite de courant.",
         "data": {
           "name": "Nom",
@@ -35,16 +35,16 @@
         }
       },
       "enter_name": {
-        "title": "Nom du tag RFID",
+        "title": "Nom de l’étiquette RFID",
         "data": {
           "name": "Nom"
         }
       },
       "rfid_delete": {
-        "title": "Supprimer le tag RFID",
-        "description": "La suppression d’un tag RFID l’enlèvera définitivement.",
+        "title": "Supprimer l’étiquette RFID",
+        "description": "La suppression d’une étiquette RFID l’enlèvera définitivement.",
         "data": {
-          "tag_id": "ID du tag"
+          "tag_id": "ID de l’étiquette"
         }
       }
     },
@@ -52,8 +52,8 @@
       "rfid_scan_failed": "Échec de la lecture RFID : {error}",
       "rfid_add_failed": "Échec de l’ajout du RFID : {error}",
       "rfid_delete_failed": "Échec de la suppression du RFID : {error}",
-      "rfid_not_found": "ID du tag RFID introuvable",
-      "rfid_empty": "Aucun tag RFID enregistré"
+      "rfid_not_found": "ID de l’étiquette RFID introuvable",
+      "rfid_empty": "Aucune étiquette RFID enregistrée"
     }
   },
   "entity": {
@@ -83,7 +83,7 @@
         "name": "Numéro de série"
       },
       "charger_status": {
-        "name": "Statut du chargeur",
+        "name": "Statut de la Wallbox",
         "state": {
           "Available": "Disponible",
           "Occupied": "Occupé",
@@ -136,7 +136,7 @@
         "name": "Statut Atmel"
       },
       "charging_is_on": {
-        "name": "Statut de la charge"
+        "name": "Statut de charge"
       }
     }
   },
@@ -144,8 +144,8 @@
     "choice": {
       "options": {
         "general": "Paramètres généraux",
-        "rfid": "Ajouter un tag RFID",
-        "rfid_delete": "Supprimer un tag RFID"
+        "rfid": "Ajouter une étiquette RFID",
+        "rfid_delete": "Supprimer une étiquette RFID"
       }
     }
   }

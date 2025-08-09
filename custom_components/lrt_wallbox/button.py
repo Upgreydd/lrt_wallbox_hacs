@@ -30,7 +30,7 @@ class RestartWallboxButton(WallboxBaseEntity, ButtonEntity):
 
     _attr_has_entity_name = True
     _attr_translation_key = ATTR_RESTART_WALLBOX
-    _attr_icon = "mdi:restart"
+    _attr_icon = "mdi:restart-alert"
     _attr_entity_category = EntityCategory.CONFIG
 
     def __init__(self, executor: WallboxClientExecutor):

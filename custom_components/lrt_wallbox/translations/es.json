@@ -2,8 +2,8 @@
   "config": {
     "step": {
       "user": {
-        "title": "Configurar LRT Wallbox",
-        "description": "Configura la conexión con tu cargador LRT Wallbox.",
+        "title": "Configurar Wallbox",
+        "description": "Configura la conexión con la estación de carga Wallbox.",
         "data": {
           "name": "Nombre",
           "host": "Host",
@@ -17,14 +17,14 @@
   "options": {
     "step": {
       "init": {
-        "title": "Opciones de LRT Wallbox",
+        "title": "Opciones de Wallbox",
         "description": "Elige una acción para realizar.",
         "data": {
           "choice": "Acción"
         }
       },
       "general": {
-        "title": "Actualizar configuración de Wallbox",
+        "title": "Configuración de Wallbox",
         "description": "Edita los detalles de conexión y el límite de corriente.",
         "data": {
           "name": "Nombre",
@@ -83,7 +83,7 @@
         "name": "Número de serie"
       },
       "charger_status": {
-        "name": "Estado del cargador",
+        "name": "Estado del Wallbox",
         "state": {
           "Available": "Disponible",
           "Occupied": "Ocupado",

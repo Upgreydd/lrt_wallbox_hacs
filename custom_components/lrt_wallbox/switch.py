@@ -21,6 +21,7 @@ from .const import (
     ATTR_LAST_TRANSACTION_START_TIME,
     ATTR_LAST_TRANSACTION_END_TIME,
     ATTR_LAST_TRANSACTION_ENERGY,
+    ATTR_CHARGING
 )
 from .entity import WallboxBaseEntity
 from .helpers import WallboxClientExecutor
@@ -45,14 +46,14 @@ class WallboxChargeSwitch(CoordinatorEntity, WallboxBaseEntity, SwitchEntity):
     """Switch to start/stop Wallbox charging."""
 
     _attr_has_entity_name = True
-    _attr_translation_key = "charging"
+    _attr_translation_key = ATTR_CHARGING
     _attr_icon = "mdi:ev-station"
 
     def __init__(self, coordinator, executor: WallboxClientExecutor):
         """Initialize the Wallbox charging switch."""
         super().__init__(coordinator)
         self.executor = executor
-        self._attr_unique_id = f"{executor.config_entry.entry_id}_charging"
+        self._attr_unique_id = f"{executor.config_entry.entry_id}_{ATTR_CHARGING}"
 
     async def async_turn_on(self, **kwargs) -> None:
         """Start charging."""

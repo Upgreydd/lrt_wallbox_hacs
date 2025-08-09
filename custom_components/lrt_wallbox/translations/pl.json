@@ -2,8 +2,8 @@
   "config": {
     "step": {
       "user": {
-        "title": "Konfiguruj LRT Wallbox",
-        "description": "Skonfiguruj połączenie z ładowarką LRT Wallbox.",
+        "title": "Konfiguracja Wallbox",
+        "description": "Skonfiguruj połączenie ze stacją ładowania Wallbox.",
         "data": {
           "name": "Nazwa",
           "host": "Host",
@@ -17,14 +17,14 @@
   "options": {
     "step": {
       "init": {
-        "title": "Opcje LRT Wallbox",
+        "title": "Opcje Wallbox",
         "description": "Wybierz akcję do wykonania.",
         "data": {
           "choice": "Akcja"
         }
       },
       "general": {
-        "title": "Aktualizacja ustawień Wallbox",
+        "title": "Ustawienia Wallbox",
         "description": "Edytuj szczegóły połączenia i ograniczenie prądu.",
         "data": {
           "name": "Nazwa",
@@ -35,16 +35,16 @@
         }
       },
       "enter_name": {
-        "title": "Nazwa taga RFID",
+        "title": "Nazwa tagu RFID",
         "data": {
           "name": "Nazwa"
         }
       },
       "rfid_delete": {
         "title": "Usuń tag RFID",
-        "description": "Usunięcie taga RFID spowoduje jego trwałe usunięcie.",
+        "description": "Usunięcie tagu RFID spowoduje trwałe usunięcie.",
         "data": {
-          "tag_id": "ID Taga"
+          "tag_id": "ID tagu"
         }
       }
     },
@@ -52,7 +52,7 @@
       "rfid_scan_failed": "Błąd skanowania RFID: {error}",
       "rfid_add_failed": "Błąd dodawania RFID: {error}",
       "rfid_delete_failed": "Błąd usuwania RFID: {error}",
-      "rfid_not_found": "ID taga nie znaleziono",
+      "rfid_not_found": "ID tagu nie znaleziono",
       "rfid_empty": "Brak znalezionych tagów RFID"
     }
   },
@@ -83,17 +83,17 @@
         "name": "Numer seryjny"
       },
       "charger_status": {
-        "name": "Status ładowarki",
+        "name": "Status Wallboxa",
         "state": {
-          "Available": "Dostępna",
-          "Occupied": "Zajęta",
-          "Reserved": "Zarezerwowana",
-          "Unavailable": "Niedostępna",
-          "Faulted": "Uszkodzona",
+          "Available": "Dostępny",
+          "Occupied": "Zajęty",
+          "Reserved": "Zarezerwowany",
+          "Unavailable": "Niedostępny",
+          "Faulted": "Uszkodzony",
           "Preparing": "Przygotowanie",
           "Charging": "Ładowanie",
-          "SuspendedEvse": "Zawieszona (EVSE)",
-          "SuspendedEv": "Zawieszona (EV)",
+          "SuspendedEvse": "Wstrzymany (EVSE)",
+          "SuspendedEv": "Wstrzymany (EV)",
           "Finishing": "Zakończenie"
         }
       },
